@@ -1,2 +1,2 @@
-# SUCOR
+# SUCO
 Social Media App
