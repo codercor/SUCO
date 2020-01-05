@@ -1,0 +1,34 @@
+
+*{
+    box-sizing: border-box;
+}
+.create-post{
+  background-color: red;  
+  height: 20vh;
+  border-radius: 2vh;
+  padding: 2vh;
+  display:flex;
+  flex-direction: column;
+  justify-content:space-between;
+}
+.create-post > .create-post-text{
+    background-color: aliceblue;
+    height: 11vh;
+    position: relative;
+}
+.create-post > .create-post-buttons{
+    background-color: darkgreen;
+    height: 4vh;
+    position: relative; 
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1vh;
+}
+.create-post > .create-post-buttons > .create-post-button-group{
+    height: 3vh;
+    width: auto;
+    padding: 1vh;
+    background-color: white;
+}
