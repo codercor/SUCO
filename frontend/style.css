@@ -9,14 +9,17 @@ html {
   
 body{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     padding: 0%;
     margin: 0;
 }
+/* Gönderi Paylaşım Bölümü */
 .create-post{
-  background-color: red;  
-  height: 20vh;
-  width: 50vw;
+  background-color: #561f55;  
+  height: 22vh;
+  min-height: 10vh;
+  width: 90vw;
+  min-width: 50%;
   border-radius: 2vh;
   padding: 2vh;
   margin: 1%;
@@ -26,12 +29,18 @@ body{
 }
 .create-post > .create-post-text{
     background-color: aliceblue;
-    height: 11vh;
+    height: 12vh;
     position: relative;
 }
+.create-post > .create-post-text > textarea{
+    height: 100%;
+    width: 100%;
+    border:none;
+    resize:none;
+}
 .create-post > .create-post-buttons{
-    background-color: darkgreen;
-    height: 4vh;
+    background-color:#cf56a1;
+    height: 5vh;
     position: relative; 
     display: flex;
     flex-direction: row;
@@ -40,11 +49,37 @@ body{
     margin-top: 1vh;
 }
 .create-post > .create-post-buttons > .create-post-button-group{
-    height: 3vh;
+    height:4vh;
     width: auto;
     padding: 1vh;
-    background-color: white;
+    background-color: #561f55;
+    color:white;
+    display: flex;
+    justify-content:start;
+    align-items: center;
+    border-top-right-radius: 1em;
+    border-bottom-right-radius: 1em;
+
 }
+.create-post-button-group > span{
+    border: 0.1ch white solid;
+    border-radius: 1.5ch;
+    padding: .11rem;
+    font-size: 10px;
+}
+.create-post-buttons > .left-button > button{
+    background-color: #fcb2bf;
+    color:#561f55;
+    border: none;
+    height: 2em;
+    width: 6em;
+    border-top-left-radius: 1em;
+    border-bottom-left-radius: 1em;
+
+}
+/* Gönderi Paylaşım Bölümü */
+
+
 
 /* Gönderilmis paylasim bileseni */
 
