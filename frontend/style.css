@@ -94,7 +94,33 @@ font-weight: bold;
     justify-content: flex-start;
    padding: 3%;
 }
-
-
-
+.text-buttons{
+    display: flex;
+    flex-direction: row;
+}
+.sent-post-sharing-area-text{
+    width: 85%;
+}
+.sent-post-sharing-buttons {
+    display: flex;
+    flex-direction: column;
+    width: 15%;
+}
+.sent-post-sharing-div-like,
+.sent-post-sharing-div-comment,
+.sent-post-sharing-div-share{
+    display: flex;
+    flex-direction: row;
+    background-color: mediumorchid;
+    width: 95px;
+    border-radius: 45%;
+    justify-content: center;
+}
+.like, .share, .comment{
+    background-color: rgb(170, 68, 75);
+    border-radius: 55%;
+    width: 55px;
+    font-size: 20px;
+    margin-right: 16px;
+}
 /* Gönderilmis paylasim bileseni */
