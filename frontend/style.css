@@ -16,7 +16,7 @@ body{
 /* Navbar Bölümü */
 .navbar{
     width: 100%;
-    height: 5vh;
+    height: 8vh;
     background: #561f55;
     color:#edf7fa;
     display: grid;
@@ -24,8 +24,54 @@ body{
     justify-content: space-between;
     align-items: center;
 }
+.navbar > :first-child{
+    font-size: 1.5em;
+}
 .navbar > :first-child > span:nth-child(1) {
     background-color: #5f6caf;
+}
+.navbar > :first-child > span:nth-child(2) {
+    background-color: #cf56a1;
+}
+.navbar > :nth-child(2){
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.navbar > :nth-child(2) > .search-bar{
+    width: 80%;
+    border: none;
+    border-radius:10px;
+    background-color:#edf7fa;
+    padding: 5px;
+    padding-left: 10px;
+    transition:all .5s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+}
+.navbar > :nth-child(2) > .search-bar:focus{
+    width: 100%;
+    box-shadow: 15px 15px 58px 7px #5f6caf;
+    border: #5f6caf 2px solid;
+    outline: none;
+    border-radius: 4px;
+    background-color:#edf7fa;
+    padding: 5px;
+    padding-left: 10px;
+}
+.navbar > :nth-child(3) {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+.navbar > :nth-child(3) > img{
+    height: 1.5em;
+    width: 1.5em;
+    box-shadow: 15px 15px 58px 7px #5f6caf;
+   
+    outline: none;
+    border-radius: 4px;
+    background-color:#edf7fa;
+    padding: 5px;
 }
 /* Navbar Bölümü */
 /* Gönderi Paylaşım Bölümü */
