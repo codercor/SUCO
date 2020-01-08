@@ -24,8 +24,30 @@ body{
     justify-content: space-between;
     align-items: center;
 }
+.navbar > .dropdown-list{
+    position: absolute;
+    right: 0.1%;
+    top:8vh;
+    height: auto;
+    width: 8vw;
+    z-index:1;
+    background: #561f55;
+    border-bottom-left-radius: 20%;
+    border-bottom-right-radius: 20%;
+    padding-bottom: 0.5em;
+    display: block;
+}
+.navbar > .dropdown-list > div{
+    background-color: #cf56a1;
+    margin-top: 10%;
+    font-size: 0.8em;
+    display: flex;
+    flex-direction: row;
+    
+}
 .navbar > :first-child{
     font-size: 1.5em;
+    margin-left: 10px;
 }
 .navbar > :first-child > span:nth-child(1) {
     background-color: #5f6caf;
@@ -74,6 +96,98 @@ body{
     padding: 5px;
 }
 /* Navbar Bölümü */
+
+/* Mesajlaşma Bölümü */
+.messenger-box{
+   
+    position:fixed;
+    height: 50vh;
+    bottom: 0;
+    right: 5vmin;
+    width: 15vw;
+    font-family: fantasy;
+    font-size: 2vmin;
+    color:white;
+    display: grid;
+    grid-template-rows: auto auto;
+    
+}
+.msngr-open{
+    height: 50vh;
+    bottom: -50vh;
+    right: 5vmin;
+    width: 15vw;
+}
+.messenger-box > .header {
+    display:grid;
+    background-color: #5f6caf;
+    grid-template-columns: 10% 75% 15%;
+}
+.messenger-box > .body {
+    border-top: 0.1vmin #ffffff solid;
+    box-shadow: .2vmin .2vmin 9vmin 1vmin #5f6caf;
+
+    display:grid;
+    grid-template-rows: 45vh 3vh;
+}
+.messenger-box > .body > .online-friends{
+background-color: #cf56a1;
+overflow-y: auto;
+}
+.messenger-box > .body > .online-friends::-webkit-scrollbar-track {
+    border: 1vmin solid #000;
+    padding: 2 0;
+    background-color: #404040;
+  }
+  
+  .messenger-box > .body > .online-friends::-webkit-scrollbar {
+    width: 1vmin;
+    background-color: #5f6caf;
+  }
+  
+.messenger-box > .body > .online-friends::-webkit-scrollbar-thumb {
+    border-radius: 2vmin;
+    background: #5f6caf;
+  }
+.messenger-box > .body > .search{
+    border:none;
+    outline: none;
+    font-size: 1.5vmin;
+    padding: 1vmin;
+}
+.messenger-box > .header > i:nth-child(1){
+    color:green;
+}
+.messenger-box > .header > i:nth-child(3){
+    color:red;
+}
+
+.messenger-box > .body > .online-friends > .friend > img{
+    max-height: 4vmin;
+    max-width: 4vmin;
+    background-color: #018383;
+    border-radius: 10vmin;
+}
+.messenger-box > .body > .online-friends > .friend{
+    margin: 1vmin;
+    height: 4vh;
+    font-size: 1.5vmin;
+    display:grid;
+    grid-template-columns: min-content auto 2vmin;
+    align-content: center;
+    align-items: center;
+    padding-bottom: 1vmin;
+    border-bottom:#5f6caf .1vmin solid;
+    transition:all .1s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+}
+.messenger-box > .body > .online-friends > .friend:hover{
+    margin: 0vmin;
+    height: 5vh;
+    box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0,0,0,0);
+}
+
+/* Mesajlaşma Bölümü */
+
 /* Gönderi Paylaşım Bölümü */
 .create-post{
   background-color: #561f55;  
