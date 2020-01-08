@@ -92,6 +92,7 @@ body{
     border-radius: 2vh;
     padding: 2vh;
     margin: 1%;
+    justify-content: flex-start;
 }
 
 .sent-post-sharing{
@@ -138,8 +139,9 @@ font-weight: bold;
 }
 .sent-post-sharing-buttons {
     display: flex;
-    flex-direction: column;
-    width: 15%;
+    flex-direction: row;
+    width: 19%;
+    justify-content: space-between;
 }
 .sent-post-sharing-div-like,
 .sent-post-sharing-div-comment,
@@ -147,15 +149,52 @@ font-weight: bold;
     display: flex;
     flex-direction: row;
     background-color: mediumorchid;
-    width: 95px;
+    width: 125px;
+    height: 5vh;
     border-radius: 45%;
-    justify-content: center;
+    /* justify-content: center; */
+    align-items: center;
+    /* padding: 2%; */
+    margin-bottom: 5px;
 }
-.like, .share, .comment{
+.like-button, .share-button, .comment-button{
     background-color: rgb(170, 68, 75);
     border-radius: 55%;
-    width: 55px;
+    width: 5vw;
+    height: 4vh;
     font-size: 20px;
-    margin-right: 16px;
+    /* margin-right: 4px; */
+    cursor: pointer;
 }
+.like-posts, .comment-Posts, .share-posts{
+    width: min-content;
+    /* padding: 2%; */
+    font-size: 1rem;
+}
+.sent-post-sharing-div{
+    display: flex;
+    flex-direction: column;
+    width: 48%;
+    margin-right: 12px;
+}
+.sent-post-sharing-Number{
+    display: flex;
+    flex-direction: column;
+    width: 48%;
+    margin-left: 18px;
+    align-items: center;
+}
+
+.sent-post-comment-area{
+    display: flex;
+    flex-direction: row;
+    border-radius: 1vh;
+    align-self: center;
+    background-color: #FAD9D5;
+    width: 90%;
+    height: min-content;
+    /* z-index: -1; */
+}
+
+
 /* Gönderilmis paylasim bileseni */
