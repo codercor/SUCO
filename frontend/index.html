@@ -176,10 +176,15 @@
         <div class="header">
             <i class="icon-circle"></i>
             <i>Messenger</i>
-            <i class="icon-cancel-circle-2"></i>
+            <i class="icon-cancel-circle-2 messenger-close"></i>
         </div>
-        <div class="body">
+        <div class="body  messenger-close">
             <div class="online-friends">
+                <div class="friend">
+                    <img src="./Img/no_image.png">
+                    <p style="text-align:left;margin: 1vmin;">Mustafa Çor</p>
+                    <i style="color:green" class="icon-circle"></i>
+                </div>
                 <div class="friend">
                     <img src="./Img/no_image.png">
                     <p style="text-align:left;margin: 1vmin;">Mustafa Çor</p>
@@ -198,8 +203,45 @@
             </div>
             <input class="search" type="text">
         </div>
+        <script>
+            
+            document.getElementsByClassName('header')[0].addEventListener('click',()=>{
+                document.getElementsByClassName('body')[0].classList.toggle('messenger-close')
+                document.getElementsByClassName('icon-cancel-circle-2')[0].classList.toggle('messenger-close')     
+            })
+            document.getElementsByClassName('navbar-dropdown')[0].addEventListener('click',()=>{
+                document.getElementsByClassName('dropdown-list')[0].classList.toggle('messenger-close')               
+            })
+           
 
+        </script>
     </div>
+     <!-- Mesaj Kutusu -->
+        <div class="message-box">
+            <div class="message-box-header">
+                <i style="color:green" class="icon-circle"></i>
+                <i>Mustafa Çor</i>
+                <i class="icon-cancel-circle-2"></i>
+            </div>
+            <div class="message-box-body">
+                <div class="messages">
+                    <div class="friend-message">
+                        Merhaba
+                    </div>
+                    <div class="send-message">
+                        Sanada Merhaba
+                    </div>
+                    <div class="friend-message">
+                        Merhaba
+                    </div>
+                    <div class="send-message">
+                        Sanada Merhaba
+                    </div>
+                </div>
+                <input class="search" type="text">
+            </div>
+        </div>
+    <!-- Mesaj Kutusu -->
     <!-- Mesajlaşma bileseni -->
 </body>
 
