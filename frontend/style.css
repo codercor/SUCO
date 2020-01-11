@@ -323,7 +323,7 @@ font-weight: bold;
 .sent-post-sharing-buttons {
     display: flex;
     flex-direction: column;
-    width: 20vh;
+    width: 20vw;
     justify-content: space-around;
     align-items: flex-end;
     
@@ -349,13 +349,13 @@ font-weight: bold;
     justify-content: flex-start;
     width: 12vh;
 }
-.sent-post-sharing-number{
+/* .sent-post-sharing-number{
     display: flex;
     flex-direction: column;
     width: 48%;
     margin-left: 18px;
     align-items: center;
-}
+} */
 
 .sent-post-comment-area{
     display: flex;
@@ -374,18 +374,31 @@ font-weight: bold;
 .sent-post-comment{
    display: flex;
    flex-direction: row;
+   border-radius: 1vh;
    background-color: #DAE8FC;
    padding: 2%;
     flex-direction: column;
+    border: 1px solid black;
+    margin-bottom: 2vh;
 }
 
 
 .sent-post-comment-user{
-   
+   display: flex;
     border-radius: 1vh;
     padding: 2%;
-    flex-direction: column;
+    flex-direction: row;
+}
+.comment{
+    width: 6vw;
 }
 
-
+.action-comment-button{
+    color:white;
+    font-size: 0.5em;
+    border-radius:100vh;
+    padding: 2vh;
+    background-color: #561f55; 
+    margin-right: 10%;
+}
 /* Gönderilmis paylasim bileseni */
