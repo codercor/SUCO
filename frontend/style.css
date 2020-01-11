@@ -324,10 +324,10 @@ font-weight: bold;
     display: flex;
     flex-direction: row;
     background-color: mediumorchid;
-    width: 125px;
+    width: 100px;
     height: 5vh;
     border-radius: 45%;
-    /* justify-content: center; */
+    justify-content: space-between;
     align-items: center;
     /* padding: 2%; */
     margin-bottom: 5px;
@@ -338,7 +338,7 @@ font-weight: bold;
     width: 5vw;
     height: 4vh;
     font-size: 20px;
-    /* margin-right: 4px; */
+    margin-right: 4px;
     cursor: pointer;
 }
 .like-posts, .comment-Posts, .share-posts{
