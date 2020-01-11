@@ -104,7 +104,7 @@ body{
    max-height: 50vh;
     position:fixed;
     bottom:0;
-    right: 5vmin;
+    right: 5vh;
     width: 25vmin;
     font-family: fantasy;
     font-size: 2vmin;
@@ -186,30 +186,51 @@ overflow-y: auto;
     box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0,0,0,0);
 }
     /* Mesaj Kutuları */
-    .message-boxes{
-     max-height: 30vh;
-    position:fixed;
-    bottom:0;
-    right: 32vmin;
-    width:30vmax;
-    font-family: fantasy;
-    font-size: 2vmin;
-    color:black;
-    
-    display: grid;
-    grid-template-columns: 90% 90%;
-    }
     .message-box{
+        position: fixed;
+        bottom: 0;
+        right: 30vh;
         display: grid;
-        grid-template-rows: 6% 94%;
-        height: 30vh;
-        background-color: red;
+        grid-template-rows: auto 90%;
+        height: 40vmin;
+        
         margin-right: 1vh;
     }
-    .message-box > .body {
+    .message-box > .message-box-body {
         background-color: tan;
         display: grid;
         grid-template-rows:  90% 10%;
+        overflow-y: scroll;
+    }
+    .message-box > .message-box-header{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        background-color: #018383;
+        opacity: 0.9;
+    }
+    .messages > .friend-message{
+        width: 90%;
+        background-color: #5f6caf;
+        color: white;
+        font-size: 3vmin;
+        height: 7vmin;
+        border-radius: 30% 30% 30% 0% / 60% 60% 60% 0%;
+        padding: 2vmin;
+        margin-top: 1vmin;
+    }
+    
+    .messages > .send-message{
+        width: 90%;
+        background-color: #cf56a1;
+        color: white;
+        font-size: 3vmin;
+        float: right;
+        height: 7vmin;
+        border-radius: 30% 30%  0% 30%/ 60% 60% 0% 60%;
+        padding: 2vmin;
+        margin-top: 1vmin;
     }
      /* Mesaj Kutuları */
 /* Mesajlaşma Bölümü */
