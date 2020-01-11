@@ -362,13 +362,32 @@ font-weight: bold;
 
 .sent-post-comment-area{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     border-radius: 1vh;
     align-self: center;
+    padding: 2%;
     background-color: #FAD9D5;
     width: 90%;
-    height: min-content;
+    height: 26vh;
+    overflow: scroll;
     /* z-index: -1; */
+}
+
+
+.sent-post-comment{
+   display: flex;
+   flex-direction: row;
+   background-color: #DAE8FC;
+   padding: 2%;
+    flex-direction: column;
+}
+
+
+.sent-post-comment-user{
+   
+    border-radius: 1vh;
+    padding: 2%;
+    flex-direction: column;
 }
 
 
