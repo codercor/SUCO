@@ -278,19 +278,19 @@ overflow-y: auto;
     border-radius: 2vh;
     padding: 2vh;
 }
-.sent-post-User{
+.sent-post-user{
     display: flex;
     /* background-color: rgb(214, 24, 24); */
     flex-direction: row;
 }
-.sent-post-User-Icon {
+.sent-post-user-icon {
     display: flex;
     padding: 2vh;
 }
 .icon-user-1:before{
    font-size: 68px;
 }
-.sent-post-User-Name{
+.sent-post-user-name{
 font-weight: bold;
 }
 
@@ -303,7 +303,15 @@ font-weight: bold;
     background-color: lightblue;
     border-radius: 1vh;
     justify-content: flex-start;
-   padding: 3%;
+    padding: 3%;
+}
+.action-button{
+    color:white;
+    font-size: 0.5em;
+    border-radius:100vh;
+    padding: 2vh;
+    background-color: #561f55; 
+    margin-right: 10%;
 }
 .text-buttons{
     display: flex;
@@ -314,45 +322,34 @@ font-weight: bold;
 }
 .sent-post-sharing-buttons {
     display: flex;
-    flex-direction: row;
-    width: 19%;
-    justify-content: space-between;
-}
-.sent-post-sharing-div-like,
-.sent-post-sharing-div-comment,
-.sent-post-sharing-div-share{
-    display: flex;
-    flex-direction: row;
-    background-color: mediumorchid;
-    width: 100px;
-    height: 5vh;
-    border-radius: 45%;
-    justify-content: space-between;
-    align-items: center;
-    /* padding: 2%; */
-    margin-bottom: 5px;
-}
-.like-button, .share-button, .comment-button{
-    background-color: rgb(170, 68, 75);
-    border-radius: 55%;
-    width: 5vw;
-    height: 4vh;
-    font-size: 20px;
-    margin-right: 4px;
-    cursor: pointer;
-}
-.like-posts, .comment-Posts, .share-posts{
-    width: min-content;
-    /* padding: 2%; */
-    font-size: 1rem;
+    flex-direction: column;
+    width: 20vh;
+    justify-content: space-around;
+    align-items: flex-end;
+    
+
 }
 .sent-post-sharing-div{
     display: flex;
-    flex-direction: column;
-    width: 48%;
-    margin-right: 12px;
+    flex-direction: row;
+    background-color: mediumorchid;
+    height: 6vh;
+    border-radius: 45%;
+    justify-content: space-between;
+    align-items: center;
+
 }
-.sent-post-sharing-Number{
+.action-counter{
+    font-size: 1.5vmin;
+    color:white;
+}
+.sent-post-sharing-div{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 12vh;
+}
+.sent-post-sharing-number{
     display: flex;
     flex-direction: column;
     width: 48%;
