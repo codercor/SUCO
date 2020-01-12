@@ -1,44 +1,49 @@
-
 html {
-    box-sizing: border-box; }
-  
+    box-sizing: border-box;
+}
+
 *,
 *:before,
 *:after {
-  box-sizing: inherit; }
-  
-body{
+    box-sizing: inherit;
+}
+
+
+body {
     display: flex;
     flex-direction: column;
     padding: 0%;
     margin: 0;
 }
+
 /* Navbar Bölümü */
-.navbar{
+.navbar {
     width: 100%;
     height: 8vh;
     background: #561f55;
-    color:#edf7fa;
+    color: #edf7fa;
     display: grid;
     grid-template-columns: 15% 50% 20%;
     justify-content: space-between;
     align-items: center;
 }
-.navbar > .dropdown-list{
+
+.navbar>.dropdown-list {
     position: absolute;
     right: 0.1%;
-    top:8vh;
+    top: 8vh;
     height: auto;
     width: 8vw;
-    z-index:1;
+    z-index: 1;
     background: #561f55;
     border-bottom-left-radius: 20%;
     border-bottom-right-radius: 20%;
     padding-bottom: 0.5em;
     display: block;
-    
+
 }
-.navbar > .dropdown-list > div{
+
+.navbar>.dropdown-list>div {
     background-color: #cf56a1;
     margin-top: 10%;
     font-size: 0.8em;
@@ -47,251 +52,280 @@ body{
 
     transition: all 1s cubic-bezier(0.6, -0.28, 0.735, 0.045);
 }
-.navbar > :first-child{
+
+.navbar> :first-child {
     font-size: 1.5em;
     margin-left: 10px;
 }
-.navbar > :first-child > span:nth-child(1) {
+
+.navbar> :first-child>span:nth-child(1) {
     background-color: #5f6caf;
 }
-.navbar > :first-child > span:nth-child(2) {
+
+.navbar> :first-child>span:nth-child(2) {
     background-color: #cf56a1;
 }
-.navbar > :nth-child(2){
+
+.navbar> :nth-child(2) {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-.navbar > :nth-child(2) > .search-bar{
+
+.navbar> :nth-child(2)>.search-bar {
     width: 80%;
     border: none;
-    border-radius:10px;
-    background-color:#edf7fa;
+    border-radius: 10px;
+    background-color: #edf7fa;
     padding: 5px;
     padding-left: 10px;
-    transition:all .5s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+    transition: all .5s cubic-bezier(0.6, -0.28, 0.735, 0.045);
 }
-.navbar > :nth-child(2) > .search-bar:focus{
+
+.navbar> :nth-child(2)>.search-bar:focus {
     width: 100%;
     box-shadow: 15px 15px 58px 7px #5f6caf;
     border: #5f6caf 2px solid;
     outline: none;
     border-radius: 4px;
-    background-color:#edf7fa;
+    background-color: #edf7fa;
     padding: 5px;
     padding-left: 10px;
 }
-.navbar > :nth-child(3) {
+
+.navbar> :nth-child(3) {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
 }
-.navbar > :nth-child(3) > img{
+
+.navbar> :nth-child(3)>img {
     height: 1.5em;
     width: 1.5em;
     box-shadow: 15px 15px 58px 7px #5f6caf;
-   
+
     outline: none;
     border-radius: 4px;
-    background-color:#edf7fa;
+    background-color: #edf7fa;
     padding: 5px;
 }
+
 /* Navbar Bölümü */
 
 /* Mesajlaşma Bölümü */
-.messenger-box{
-   max-height: 50vh;
-    position:fixed;
-    bottom:0;
+.messenger-box {
+    max-height: 50vh;
+    position: fixed;
+    bottom: 0;
     right: 5vh;
     width: 25vmin;
     font-family: fantasy;
     font-size: 2vmin;
-    color:white;
+    color: white;
     display: grid;
     grid-template-rows: min-content min-content;
-    
+
 }
 
-.messenger-close{
+.messenger-close {
     display: none !important;
 }
-.messenger-box > .header {
-    display:grid;
+
+.messenger-box>.header {
+    display: grid;
     background-color: #5f6caf;
     grid-template-columns: 10% 65% 25%;
 }
-.messenger-box > .body {
+
+.messenger-box>.body {
     border-top: 0.1vmin #ffffff solid;
     box-shadow: .2vmin .2vmin 9vmin 1vmin #5f6caf;
 
-    display:grid;
+    display: grid;
     grid-template-rows: auto 3vh;
 }
-.messenger-box > .body > .online-friends{
-background-color: #cf56a1;
-overflow-y: auto;
+
+.messenger-box>.body>.online-friends {
+    background-color: #cf56a1;
+    overflow-y: auto;
 }
-.messenger-box > .body > .online-friends::-webkit-scrollbar-track {
+
+.messenger-box>.body>.online-friends::-webkit-scrollbar-track {
     border: 1vmin solid #000;
     padding: 2 0;
     background-color: #404040;
-  }
-  
-  .messenger-box > .body > .online-friends::-webkit-scrollbar {
+}
+
+.messenger-box>.body>.online-friends::-webkit-scrollbar {
     width: 1vmin;
     background-color: #5f6caf;
-  }
-  
-.messenger-box > .body > .online-friends::-webkit-scrollbar-thumb {
+}
+
+.messenger-box>.body>.online-friends::-webkit-scrollbar-thumb {
     border-radius: 2vmin;
     background: #5f6caf;
-  }
-.messenger-box > .body > .search{
-    border:none;
+}
+
+.messenger-box>.body>.search {
+    border: none;
     outline: none;
     font-size: 1.5vmin;
     padding: 1vmin;
 }
-.messenger-box > .header > i:nth-child(1){
-    color:green;
+
+.messenger-box>.header>i:nth-child(1) {
+    color: green;
 }
-.messenger-box > .header > i:nth-child(3){
-    color:black;
+
+.messenger-box>.header>i:nth-child(3) {
+    color: black;
     text-align: right;
 }
 
-.messenger-box > .body > .online-friends > .friend > img{
+.messenger-box>.body>.online-friends>.friend>img {
     max-height: 5vmin;
     max-width: 5vmin;
     background-color: #018383;
     border-radius: 10vmin;
 }
-.messenger-box > .body > .online-friends > .friend{
+
+.messenger-box>.body>.online-friends>.friend {
     margin: 1vmin;
     height: 5vh;
     font-size: 1.5vmin;
-    display:grid;
+    display: grid;
     grid-template-columns: min-content auto 2vmin;
     align-items: center;
     padding-bottom: 1vmin;
-    border-bottom:#5f6caf .1vmin solid;
-    transition:all .1s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+    border-bottom: #5f6caf .1vmin solid;
+    transition: all .1s cubic-bezier(0.6, -0.28, 0.735, 0.045);
 }
-.messenger-box > .body > .online-friends > .friend:hover{
+
+.messenger-box>.body>.online-friends>.friend:hover {
     background-color: #018383;
-    color:white;
+    color: white;
     height: 6vh;
-    box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0,0,0,0);
+    box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0, 0, 0, 0);
 }
-    /* Mesaj Kutuları */
-    .message-box{
-        position: fixed;
-        bottom: 0;
-        right: 30vh;
-        display: grid;
-        grid-template-rows: auto 90%;
-        height: 40vmin;
-        
-        margin-right: 1vh;
-    }
-    .message-box > .message-box-body {
-        background-color: tan;
-        display: grid;
-        grid-template-rows:  90% 10%;
-        overflow-y: scroll;
-    }
-    .message-box > .message-box-header{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-        align-items: center;
-        background-color: #018383;
-        opacity: 0.9;
-    }
-    .messages > .friend-message{
-        width: 90%;
-        background-color: #5f6caf;
-        color: white;
-        font-size: 3vmin;
-        height: 7vmin;
-        border-radius: 30% 30% 30% 0% / 60% 60% 60% 0%;
-        padding: 2vmin;
-        margin-top: 1vmin;
-    }
-    
-    .messages > .send-message{
-        width: 90%;
-        background-color: #cf56a1;
-        color: white;
-        font-size: 3vmin;
-        float: right;
-        height: 7vmin;
-        border-radius: 30% 30%  0% 30%/ 60% 60% 0% 60%;
-        padding: 2vmin;
-        margin-top: 1vmin;
-    }
-     /* Mesaj Kutuları */
+
+/* Mesaj Kutuları */
+.message-box {
+    position: fixed;
+    bottom: 0;
+    right: 30vh;
+    display: grid;
+    grid-template-rows: auto 90%;
+    height: 40vmin;
+
+    margin-right: 1vh;
+}
+
+.message-box>.message-box-body {
+    background-color: tan;
+    display: grid;
+    grid-template-rows: 90% 10%;
+    overflow-y: scroll;
+}
+
+.message-box>.message-box-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #018383;
+    opacity: 0.9;
+}
+
+.messages>.friend-message {
+    width: 90%;
+    background-color: #5f6caf;
+    color: white;
+    font-size: 3vmin;
+    height: 7vmin;
+    border-radius: 30% 30% 30% 0% / 60% 60% 60% 0%;
+    padding: 2vmin;
+    margin-top: 1vmin;
+}
+
+.messages>.send-message {
+    width: 90%;
+    background-color: #cf56a1;
+    color: white;
+    font-size: 3vmin;
+    float: right;
+    height: 7vmin;
+    border-radius: 30% 30% 0% 30%/ 60% 60% 0% 60%;
+    padding: 2vmin;
+    margin-top: 1vmin;
+}
+
+/* Mesaj Kutuları */
 /* Mesajlaşma Bölümü */
 
 /* Gönderi Paylaşım Bölümü */
-.create-post{
-  background-color: #561f55;  
-  height: 22vh;
-  min-height: 10vh;
-  width: 90vw;
-  min-width: 50%;
-  border-radius: 2vh;
-  padding: 2vh;
-  margin: 1%;
-  display:flex;
-  flex-direction: column;
-  justify-content:space-between;
+.create-post {
+    background-color: #561f55;
+    height: 22vh;
+    min-height: 10vh;
+    width: 90vw;
+    min-width: 50%;
+    border-radius: 2vh;
+    padding: 2vh;
+    margin: 1%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
-.create-post > .create-post-text{
+
+.create-post>.create-post-text {
     background-color: aliceblue;
     height: 12vh;
     position: relative;
 }
-.create-post > .create-post-text > textarea{
+
+.create-post>.create-post-text>textarea {
     height: 100%;
     width: 100%;
-    border:none;
-    resize:none;
+    border: none;
+    resize: none;
 }
-.create-post > .create-post-buttons{
-    background-color:#cf56a1;
+
+.create-post>.create-post-buttons {
+    background-color: #cf56a1;
     height: 5vh;
-    position: relative; 
+    position: relative;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     margin-top: 1vh;
 }
-.create-post > .create-post-buttons > .create-post-button-group{
-    height:4vh;
+
+.create-post>.create-post-buttons>.create-post-button-group {
+    height: 4vh;
     width: auto;
     padding: 1vh;
     background-color: #561f55;
-    color:white;
+    color: white;
     display: flex;
-    justify-content:start;
+    justify-content: start;
     align-items: center;
     border-top-right-radius: 1em;
     border-bottom-right-radius: 1em;
 
 }
-.create-post-button-group > span{
+
+.create-post-button-group>span {
     border: 0.1ch white solid;
     border-radius: 1.5ch;
     padding: .11rem;
     font-size: 10px;
 }
-.create-post-buttons > .left-button > button{
+
+.create-post-buttons>.left-button>button {
     background-color: #fcb2bf;
-    color:#561f55;
+    color: #561f55;
     border: none;
     height: 2em;
     width: 6em;
@@ -299,49 +333,59 @@ overflow-y: auto;
     border-bottom-left-radius: 1em;
 
 }
+
 /* Gönderi Paylaşım Bölümü */
 
 
 
 /* Gönderilmis paylasim bileseni */
 
-.sent-post{
+.sent-post {
     display: flex;
     flex-direction: column;
     background-color: rgb(117, 116, 115);
     height: 98vh;
     width: 50vw;
     border-radius: 2vh;
-    padding: 2vh;
+    padding: 1vh;
     margin: 1%;
     justify-content: flex-start;
 }
 
-.sent-post-sharing{
+.sent-post-sharing {
     display: flex;
     flex-direction: column;
     background-color: #F0A30A;
     height: min-content;
     border-radius: 2vh;
-    padding: 2vh;
+    padding: 1vh;
 }
-.sent-post-user{
+
+.sent-post-user {
     display: flex;
     /* background-color: rgb(214, 24, 24); */
     flex-direction: row;
-}
-.sent-post-user-icon {
     display: flex;
-    padding: 2vh;
-}
-.icon-user-1:before{
-   font-size: 68px;
-}
-.sent-post-user-name{
-font-weight: bold;
+    border-radius: 1vh;
+    padding: 0.5%;
+    flex-direction: row;
 }
 
-.sent-post-sharing-area{
+.sent-post-user-icon {
+    display: flex;
+    padding:1%;
+}
+
+.icon-user-1:before {
+    font-size: 68px;
+}
+
+.sent-post-user-name {
+    font-weight: bold;
+    padding:1%;
+}
+
+.sent-post-sharing-area {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -350,33 +394,38 @@ font-weight: bold;
     background-color: lightblue;
     border-radius: 1vh;
     justify-content: flex-start;
-    padding: 3%;
+    padding: 1%;
 }
-.action-button{
-    color:white;
-    font-size: 0.5em;
-    border-radius:100vh;
+
+.action-button {
+    color: white;
+    font-size: 20px;
+    border-radius: 100vh;
     padding: 2vh;
-    background-color: #561f55; 
+    background-color: #561f55;
     margin-right: 10%;
 }
-.text-buttons{
+
+.text-buttons {
     display: flex;
     flex-direction: row;
 }
-.sent-post-sharing-area-text{
+
+.sent-post-sharing-area-text {
     width: 85%;
 }
+
 .sent-post-sharing-buttons {
     display: flex;
     flex-direction: column;
     width: 20vw;
     justify-content: space-around;
     align-items: flex-end;
-    
+
 
 }
-.sent-post-sharing-div{
+
+.sent-post-sharing-div {
     display: flex;
     flex-direction: row;
     background-color: mediumorchid;
@@ -386,16 +435,21 @@ font-weight: bold;
     align-items: center;
 
 }
-.action-counter{
+
+.action-counter {
     font-size: 1.5vmin;
-    color:white;
+    color: white;
+    margin-bottom: 9px;
 }
-.sent-post-sharing-div{
+
+.sent-post-sharing-div {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     width: 12vh;
+    margin-bottom: 2%;
 }
+
 /* .sent-post-sharing-number{
     display: flex;
     flex-direction: column;
@@ -404,49 +458,60 @@ font-weight: bold;
     align-items: center;
 } */
 
-.sent-post-comment-area{
+.sent-post-comment-area {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     border-radius: 1vh;
     align-self: center;
     background-color: #FAD9D5;
-    width: 90%;
-    height: min-content;
-    /* z-index: -1; */
+    width: 80%;
+    height: 35vh;
+    padding: 2%;
+    overflow: scroll;
+   
 }
 
 
-<<<<<<< HEAD
-.sent-post-comment{
-   display: flex;
-   flex-direction: row;
-   border-radius: 1vh;
-   background-color: #DAE8FC;
-   padding: 2%;
+.sent-post-comment {
+    display: flex;
+    flex-direction: row;
+    border-radius: 1vh;
+    background-color: #DAE8FC;
+    padding: 2%;
     flex-direction: column;
     border: 1px solid black;
-    margin-bottom: 2vh;
+    margin: 1vh;
 }
 
 
-.sent-post-comment-user{
-   display: flex;
+.sent-post-comment-user {
+    display: flex;
     border-radius: 1vh;
-    padding: 2%;
+    padding: 1%;
     flex-direction: row;
 }
-.comment{
-    width: 6vw;
+
+.comment {
+    width: 4vw;
+    height: 3vh;
+    padding: 1%;
+    margin-bottom: 2%;
 }
 
-.action-comment-button{
-    color:white;
-    font-size: 0.5em;
-    border-radius:100vh;
-    padding: 2vh;
-    background-color: #561f55; 
+.action-commentA-button {
+    color: white;
+    font-size: 14px;
+    border-radius: 100vh;
+    padding: 0.25vh;
+    background-color: #561f55;
     margin-right: 10%;
+    height: 1.5vh;
+    width: 1.5vw;
+    justify-content: center;
+    display: flex;
+    align-items: center;
 }
-=======
->>>>>>> 916c308135adfd4932df6497daea8631893ae5ff
+.cunter-lidle{
+    font-size: 15px;
+}
 /* Gönderilmis paylasim bileseni */
