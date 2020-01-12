@@ -360,9 +360,7 @@ body {
     border-radius: 2vh;
     padding: 1vh;
 }
-.comment-buttons{
-    width: 15% !important;
-}
+
 .sent-post-user {
     display: flex;
     /* background-color: rgb(214, 24, 24); */
@@ -378,6 +376,9 @@ body {
     padding:1%;
 }
 
+.icon-user-1:before {
+    font-size: 68px;
+}
 
 .sent-post-user-name {
     font-weight: bold;
@@ -398,33 +399,26 @@ body {
 
 .action-button {
     color: white;
-    font-size: 0.5em;
+    font-size: 20px;
     border-radius: 100vh;
     padding: 2vh;
     background-color: #561f55;
     margin-right: 10%;
 }
-.action-comment-button {
-    padding: 1vh;
-    font-size: 0.35em;
-}
+
 .text-buttons {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
 }
 
 .sent-post-sharing-area-text {
-    width: 75%;
-}
-.sent-post-sharing-area-text-comment {
     width: 85%;
 }
+
 .sent-post-sharing-buttons {
     display: flex;
     flex-direction: column;
-    width: 25%;
-    float: left;
+    width: 20vw;
     justify-content: space-around;
     align-items: flex-end;
 
@@ -435,33 +429,26 @@ body {
     display: flex;
     flex-direction: row;
     background-color: mediumorchid;
-    height: 5vh;
+    height: 6vh;
     border-radius: 45%;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
-    width: 12vh;
-    margin-bottom: 2%;
-}
-.comment-button-div {
 
-background-color: mediumorchid;
-display:flex;
-border-radius: 45%;
-align-items: center;
-width: 6vh;
-height: 3vh;
-margin-bottom: 2%;
 }
+
 .action-counter {
     font-size: 1.5vmin;
     color: white;
-    text-align: center;
-}
-.comment-counter{
-    font-size: 0.75vmin !important;
-    color: white;
+    margin-bottom: 9px;
 }
 
+.sent-post-sharing-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 12vh;
+    margin-bottom: 2%;
+}
 
 /* .sent-post-sharing-number{
     display: flex;
@@ -511,5 +498,20 @@ margin-bottom: 2%;
     margin-bottom: 2%;
 }
 
-
+.action-commentA-button {
+    color: white;
+    font-size: 14px;
+    border-radius: 100vh;
+    padding: 0.25vh;
+    background-color: #561f55;
+    margin-right: 10%;
+    height: 1.5vh;
+    width: 1.5vw;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
+.cunter-lidle{
+    font-size: 15px;
+}
 /* Gönderilmis paylasim bileseni */
