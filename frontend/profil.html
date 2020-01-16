@@ -160,15 +160,7 @@ to get the desired effect
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="profil.html" class="nav-link">
-                                <i class="nav-icon fas fa-cog"></i>
-                                <p>
-                                    Profil
-                                    <span class="right badge badge-danger">New</span>
-                                </p>
-                            </a>
-                        </li>
+
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
@@ -183,7 +175,7 @@ to get the desired effect
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0 text-dark">Anasayfa</h1>
+                            <h1 class="m-0 text-dark">Profil</h1>
                         </div><!-- /.col -->
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
@@ -199,38 +191,72 @@ to get the desired effect
             <!-- Main content -->
             <div class="content">
                 <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-12 offset-md-2  col-md-8">
-                            <div class="card card-primary">
-                                <div class="card-header">
-                                    <h3 class="card-title">Paylaşım</h3>
-                                </div>
-                                <!-- /.card-header -->
-                                <div class="card-body">
-                                    <form role="form">
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <!-- textarea -->
-                                                <div class="form-group">
-                                                    <textarea class="form-control" rows="5"
-                                                        placeholder="Paylaş ..."></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-5">
-                                                <i class="fas fa-users ml-3"></i>
-                                                <i class="fas text-warning fa-smile ml-3 "></i>
-                                                <i class="fas fa-image ml-3"></i>
-                                            </div>
-                                            <button class="btn btn-primary ml-auto">Paylaş</button>
-                                        </div>
-                                    </form>
-                                </div>
-                                <!-- /.card-body -->
+                  <div class="row">
+                      <div class="col-8 offset-md-2">
+                        <div class="card card-widget widget-user">
+                            <!-- Add the bg color to the header using any of the bg-* classes -->
+                            <div style="background: url('https://i.pinimg.com/originals/9f/62/a5/9f62a5141e09fb9a8b071604ca88220c.jpg');background-size: cover;" class="widget-user-header bg-info">
+                              <h3 class="widget-user-username">Alexander Pierce</h3>
+                              <h5 class="widget-user-desc">Founder &amp; CEO</h5>
                             </div>
-                        </div>
-                    </div>
+                            <div class="widget-user-image">
+                              <img class="img-circle elevation-2" src="dist/img/user1-128x128.jpg" alt="User Avatar">
+                            </div>
+                            <div class="card-footer">
+                              <div class="row">
+                                <div class="col-sm-4 border-right">
+                                  <div class="description-block">
+                                    <h5 class="description-header">2</h5>
+                                    <span class="description-text">Gönderi</span>
+                                  </div>
+                                  <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-sm-4 border-right">
+                                  <div class="description-block">
+                                    <h5 class="description-header">23</h5>
+                                    <span class="description-text">Arkadaş</span>
+                                  </div>
+                                  <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-sm-4">
+                                  <div class="description-block">
+                                    <button type="button" class="btn btn-block btn-outline-primary">Arkadaş Ekle</button>
+                                  </div>
+                                  <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                              </div>
+                              <!-- /.row -->
+                            </div>
+                          </div>
+                          <div class="card card-widget widget-user-2">
+                            <!-- Add the bg color to the header using any of the bg-* classes -->
+                            
+                            <div class="card-footer p-0">
+                              <ul class="nav flex-column">
+                                <li class="nav-item">
+                                  <a  class="nav-link">
+                                    <i class="fas fa-birthday-cake mr-2"></i> Doğum Tarihi <span class="float-right badge">31.05.1996</span>
+                                  </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a  class="nav-link">
+                                        <i class="fas fa-street-view mr-2"></i> Şehir <span class="float-right badge">Ankara</span>
+                                    </a>
+                                  </li>
+                                  <li class="nav-item">
+                                    <a  class="nav-link">
+                                        <i class="fas fa-briefcase mr-2"></i> Meslek <span class="float-right badge">Senior Developer</span>
+                                    </a>
+                                  </li>
+                              </ul>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+                    <!-- /.row -->
                     <div class="row">
                         <div class="card card-widget offset-md-2 col-md-8">
                             <div class="card-header">
@@ -386,8 +412,6 @@ to get the desired effect
                             <!-- /.card-footer -->
                         </div>
                     </div>
-                    <!-- /.row -->
-
                 </div>
                 <!-- /.container-fluid -->
             </div>
