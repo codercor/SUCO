@@ -1,3 +1,3 @@
 module.exports = {
-    api_secret_key: "laylaylom galiba sana göre sevmeler"
+    api_secret_key: "suco medya sosyal medya"
 };
