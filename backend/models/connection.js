@@ -15,7 +15,9 @@ let connection = mysql.createConnection({
     connection.connect();
 
 setInterval(()=>{
-    connection.query("SELECT * FROM kullanicilar");
+    connection.query("SET NAMES 'latin5'");
+    connection.query("SET CHARACTER SET latin5");
+    connection.query("SET COLLATION_CONNECTION = 'latin5_turkish_ci'");
 },1000);
 
 
