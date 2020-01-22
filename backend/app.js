@@ -1,12 +1,12 @@
-const app = require('express')();
+const express = require('express');
+const app = express();
 const bodyParser = require("body-parser");
-let upload = require("multer")();
+
 const userController = require('./controllers/userController');
 
+app.use(express.static('public'));
 app.use(bodyParser.json());
-app.use(upload.array());
 app.use(bodyParser.urlencoded({ extended: true }));
- 
 
 
 app.use('/user',userController);
