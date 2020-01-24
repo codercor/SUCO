@@ -4,11 +4,11 @@ let userModel = {};
 
 userModel.register = async (user) => {
     let check = await userModel.checkMail(user.eposta);
- // Kayıtlı mı diye kontrol et 
+    // Kayıtlı mı diye kontrol et 
     if (check.length > 0) {
         return new Promise((resolve, reject) => {
             // Kayıtlı ise gerekli cevabı ver
-            resolve({ register: false, err:"registered" })
+            resolve({ register: false, err: "registered" })
         });
     }
     // Kayıtlı değil ise kaydet
@@ -33,7 +33,7 @@ userModel.checkMail = (mail) => {
     });
 }
 
-userModel.checkUser = (userName,password)=>{
+userModel.checkUser = (userName, password) => {
     return new Promise((resolve, reject) => {
         let sql = `SELECT * FROM kullanicilar WHERE kullaniciAdi = "${userName}" AND sifre="${password}"`;
         con.query(
@@ -41,6 +41,36 @@ userModel.checkUser = (userName,password)=>{
                 if (err) reject(err)
                 resolve(result);
             });
+    });
+}
+
+userModel.getIdbyUserName = (userName) => {
+    return new Promise((resolve, reject) => {
+        let sql = `SELECT * FROM kullanicilar WHERE kullaniciAdi = "${userName}"`;
+        con.query(
+            sql, (err, result) => {
+                if (err) reject(err)
+                resolve(result);
+            });
+    });
+}
+
+userModel.updatePP = (id,ppPath)=>{
+    return new Promise((resolve,reject)=>{
+        let sql =`UPDATE kullanicilar SET profilResmi = "${ppPath}" WHERE id = ${id}`;
+        con.query(sql,(err,result)=>{
+           if(err) reject(err);
+           resolve(result);
+        })
+    });
+}
+userModel.updateCP = (id,cpPath)=>{
+    return new Promise((resolve,reject)=>{
+        let sql =`UPDATE kullanicilar SET kapakResmi = "${cpPath}" WHERE id = ${id}`;
+        con.query(sql,(err,result)=>{
+           if(err) reject(err);
+           resolve(result);
+        })
     });
 }
 module.exports = userModel;
