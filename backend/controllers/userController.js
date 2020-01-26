@@ -122,16 +122,31 @@ router.post('/:username',auth,async (req,res)=>{
    }
 });
 
-router.post('/addFriend/:username',auth,async(req,res)=>{
+async function getUsernamesAndIdes(req) {
     let myUserName = jwt.verify(req.body.token,require("../config").api_secret_key).userName;
     let sentUserName = req.params.username;
 
     let myId = await userModel.getIdbyUserName(myUserName);
     let sentUserId = await userModel.getIdbyUserName(sentUserName);
+
+    return {myUserName,sentUserName,myId,sentUserId};
+}
+
+router.post('/addFriend/:username',auth,async(req,res)=>{
+    let {myUserName,sentUserName,myId,sentUserId} = await getUsernamesAndIdes(req);
     await userModel.sendFriendRequest(myId,sentUserId);
     res.send(` istek gönderen username : ${myUserName} id: ${myId} \n Istek gönderilen username: ${sentUserName} id : ${sentUserId} `); 
 });
 
+router.post('/acceptFriendRequest/:username', auth, async(req,res)=>{
+    let {myUserName,sentUserName,myId,sentUserId} = await getUsernamesAndIdes(req);
+    await userModel.acceptFriendRequest(myId,sentUserId);
+    res.send(`${myUserName} kullanıcısı ${sentUserName}'in arkadaşlık isteğini kabul etti.`);
+});
 
-
+router.post('/rejectFriendRequest/:username', auth, async(req,res)=>{
+    let {myUserName,sentUserName,myId,sentUserId} = await getUsernamesAndIdes(req);
+    await userModel.rejectFriendRequest(myId,sentUserId);
+    res.send(`${myUserName} adlı kullanıcı ${sentUserName} adlı kullanıcının arkadaşlık isteğini REDDETTİ.`)
+});
 module.exports = router;

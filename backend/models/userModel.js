@@ -13,7 +13,7 @@ userModel.register = async (user) => {
     }
     // Kayıtlı değil ise kaydet
     return new Promise((resolve, reject) => {
-        let sql = `INSERT INTO kullanicilar(kullaniciAdi,adSoyad,kisiselBilgi,sifre,profilResmi,kapakResmi,eposta,arkadaslari,istekler,ayarlar) VALUES (?,?,?,?,?,?,?,?,?,?)`;
+        let sql = `INSERT INTO kullanicilar(kullaniciAdi,adSoyad,kisiselBilgi,sifre,profilResmi,kapakResmi,eposta,ayarlar) VALUES (?,?,?,?,?,?,?,?)`;
         con.query(
             sql, Object.values(user), (err, result) => {
                 if (err) reject(err)
@@ -84,7 +84,21 @@ userModel.getUserByUserName = function (username) {
     })
 }
 
-userModel.sendFriendRequest = async function (myId, sentId) {
+
+function convertJS(requestData) {
+    requestData = JSON.parse(requestData);
+    requestData.gelen = JSON.parse(requestData.gelen);
+    requestData.gonderilen = JSON.parse(requestData.gonderilen)
+    return requestData;
+}
+function convertString(requestData) {
+    let stringGelen = JSON.stringify(requestData.gelen);
+    let stringGonderilen = JSON.stringify(requestData.gonderilen);
+    let stringRequest = `{"gelen":"${stringGelen}","gonderilen":"${stringGonderilen}"}`;
+    return stringRequest;
+}
+
+async function getAllFriendRequests(myId, sentId) {
     let myRequests = await (new Promise((resolve, reject) => {
         let sql = `SELECT istekler FROM kullanicilar WHERE id = ${myId}`;
         con.query(sql, (err, result) => {
@@ -99,35 +113,92 @@ userModel.sendFriendRequest = async function (myId, sentId) {
             resolve(result[0].istekler);
         })
     }));
-    JSON.parse("[1,2,3]")
-    itsRequests = convertJS(itsRequests);
-    myRequests = convertJS(myRequests);
+    return { myRequests, itsRequests };
+}
 
-    itsRequests.gelen.push(myId);
-    myRequests.gonderilen.push(sentId);
-    convertString(myRequests);
-    
-    let updateMyRequests = new Promise((resolve, reject) => {
-        let sql = `UPDATE kullanicilar SET istekler=' ${ convertString(myRequests) } ' WHERE id = ${myId}`;
+function updateRequest(request, id) {
+    return new Promise((resolve, reject) => {
+        let sql = `UPDATE kullanicilar SET istekler=' ${convertString(request)} ' WHERE id = ${id}`;
         con.query(sql, (err, result) => {
             if (err) reject(err);
             resolve(result);
         })
     });
-
-
-    function convertJS(requestData) {
-        requestData = JSON.parse(requestData);
-        requestData.gelen = JSON.parse(requestData.gelen);
-        requestData.gonderilen = JSON.parse(requestData.gonderilen)
-        return requestData;
-    }
-    function convertString(requestData) {
-        let stringGelen = JSON.stringify(requestData.gelen);
-        let stringGonderilen = JSON.stringify(requestData.gonderilen);
-        let stringRequest = `{"gelen":"${stringGelen}","gonderilen":"${stringGonderilen}"}`;
-        return stringRequest;
-    }
 }
 
+function getFriends(id) {
+    return new Promise((resolve, reject) => {
+        let sql = `SELECT arkadaslar FROM kullanicilar WHERE id = ${id}`;
+        con.query(sql, (err, result) => {
+            if (err) reject(err);
+            resolve(JSON.parse(result[0].arkadaslar));
+        })
+    });
+}
+
+function updateFriends(id, arkadaslar) {
+    return new Promise((resolve, reject) => {
+        let sql = `UPDATE kullanicilar SET arkadaslar = "${arkadaslar}" WHERE id = ${id}`;
+        con.query(sql, (err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        })
+    });
+}
+userModel.sendFriendRequest = async function (myId, sentId) {
+    let { myRequests, itsRequests } = await getAllFriendRequests(myId, sentId);
+
+    itsRequests = convertJS(itsRequests);
+    myRequests = convertJS(myRequests);
+
+    if (itsRequests.gelen.includes(myId) && myRequests.gonderilen.includes(sentId)) {
+        return;
+    }
+
+    itsRequests.gelen.push(myId);
+    myRequests.gonderilen.push(sentId);
+
+    //Update myRequest in db
+    updateRequest(myRequests, myId);
+    //Update itsRequests in db
+    updateRequest(itsRequests, sentId);
+}
+
+
+userModel.acceptFriendRequest = async function (myId, ItsId) {
+    let { myRequests, itsRequests } = await getAllFriendRequests(myId, ItsId);
+    itsRequests = convertJS(itsRequests);
+    myRequests = convertJS(myRequests);
+
+    let myFriends, itsFriends;
+    myFriends = await getFriends(myId);
+    itsFriends = await getFriends(ItsId);
+
+    if (myRequests.gelen.includes(ItsId) && itsRequests.gonderilen.includes(myId)) {
+        let ItsIdIndex = myRequests.gelen.indexOf(ItsId);
+        let myIdIndex = itsRequests.gonderilen.indexOf(myId);
+        myRequests.gelen.splice(ItsIdIndex, 1);
+        itsRequests.gonderilen.splice(myIdIndex, 1);
+        myFriends.push(ItsId);
+        itsFriends.push(myId);
+        updateFriends(myId, JSON.stringify(myFriends));
+        updateFriends(ItsId, JSON.stringify(itsFriends));
+        updateRequest(myRequests, myId);
+        updateRequest(itsRequests, ItsId);
+    }
+}
+userModel.rejectFriendRequest = async function (myId, ItsId) {
+    let { myRequests, itsRequests } = await getAllFriendRequests(myId, ItsId);
+    itsRequests = convertJS(itsRequests);
+    myRequests = convertJS(myRequests);
+
+    if (myRequests.gelen.includes(ItsId) && itsRequests.gonderilen.includes(myId)) {
+        let ItsIdIndex = myRequests.gelen.indexOf(ItsId);
+        let myIdIndex = itsRequests.gonderilen.indexOf(myId);
+        myRequests.gelen.splice(ItsIdIndex, 1);
+        itsRequests.gonderilen.splice(myIdIndex, 1);
+        updateRequest(myRequests, myId);
+        updateRequest(itsRequests, ItsId);
+    }
+}
 module.exports = userModel;
