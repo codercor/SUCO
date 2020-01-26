@@ -67,10 +67,10 @@ router.post('/updatePP', async(req, res) => {
                 token = jwt.verify(token, require("../config").api_secret_key);
                 // OOOY OY
                 let userName = token.userName;
-                let userData = await userModel.getIdbyUserName(userName);
-                let photoName = token.userName+userData[0].id + '.' + req.file.originalname.split('.')[1];
+                let userId = await userModel.getIdbyUserName(userName);
+                let photoName = token.userName+userId + '.' + req.file.originalname.split('.')[1];
                 fs.renameSync(req.file.path, req.file.destination + photoName);
-                await userModel.updatePP(userData[0].id,'/userpp/' + photoName);
+                await userModel.updatePP(userId,'/userpp/' + photoName);
                 res.send(`<img src="/userpp/${photoName}" />`);
                 //res.json({ update: "successfull", src:'/userpp/' + photoName})
 
@@ -94,10 +94,10 @@ router.post('/updateCP', async(req, res) => {
                 token = jwt.verify(token, require("../config").api_secret_key);
                 // OOOY OY
                 let userName = token.userName;
-                let userData = await userModel.getIdbyUserName(userName);
-                let photoName = token.userName+userData[0].id + '.' + req.file.originalname.split('.')[1];
+                let userId = await userModel.getIdbyUserName(userName);
+                let photoName = token.userName+userId + '.' + req.file.originalname.split('.')[1];
                 fs.renameSync(req.file.path, req.file.destination + photoName);
-                await userModel.updateCP(userData[0].id,'/usercp/' + photoName);
+                await userModel.updateCP(userId,'/usercp/' + photoName);
                 res.send(`<img src="/usercp/${photoName}" />`);
                 //res.json({ update: "successfull", src:'/userpp/' + photoName})
 
@@ -109,5 +109,29 @@ router.post('/updateCP', async(req, res) => {
     });
 
 });
+
+router.post('/:username',auth,async (req,res)=>{
+   let username = req.params.username;
+   let data = await userModel.getUserByUserName(username);
+   let tokenUserName = jwt.verify(req.body.token,require("../config").api_secret_key);
+   if(tokenUserName.userName == username){
+       Object.assign(data[0],data[0], {myProfile:true})
+       res.json(data[0])
+   }else{
+       res.json(data[0]); 
+   }
+});
+
+router.post('/addFriend/:username',auth,async(req,res)=>{
+    let myUserName = jwt.verify(req.body.token,require("../config").api_secret_key).userName;
+    let sentUserName = req.params.username;
+
+    let myId = await userModel.getIdbyUserName(myUserName);
+    let sentUserId = await userModel.getIdbyUserName(sentUserName);
+    await userModel.sendFriendRequest(myId,sentUserId);
+    res.send(` istek gönderen username : ${myUserName} id: ${myId} \n Istek gönderilen username: ${sentUserName} id : ${sentUserId} `); 
+});
+
+
 
 module.exports = router;
