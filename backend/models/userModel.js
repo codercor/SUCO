@@ -201,4 +201,43 @@ userModel.rejectFriendRequest = async function (myId, ItsId) {
         updateRequest(itsRequests, ItsId);
     }
 }
+
+userModel.cancelFriendRequest = async function (myId, ItsId) {
+    let { myRequests, itsRequests } = await getAllFriendRequests(myId, ItsId);
+    itsRequests = convertJS(itsRequests);
+    myRequests = convertJS(myRequests);
+
+    if (myRequests.gonderilen.includes(ItsId) && itsRequests.gelen.includes(myId)) {
+        let ItsIdIndex = myRequests.gonderilen.indexOf(ItsId);
+        let myIdIndex = itsRequests.gelen.indexOf(myId);
+        myRequests.gonderilen.splice(ItsIdIndex, 1);
+        itsRequests.gelen.splice(myIdIndex, 1);
+        updateRequest(myRequests, myId);
+        updateRequest(itsRequests, ItsId);
+    }
+}
+
+userModel.deleteFriend = async function (myId, itsId) {
+    let myFriends = await getFriends(myId);
+    let itsFriends = await getFriends(itsId);
+    let itsIdIndex = myFriends.indexOf(itsId);
+    let myIdIndex = itsFriends.indexOf(myFriends);
+
+    myFriends.splice(itsIdIndex, 1);
+    itsFriends.splice(myIdIndex, 1);
+
+    updateFriends(myId, JSON.stringify(myFriends));
+    updateFriends(itsId, JSON.stringify(itsFriends));
+}
+
+userModel.getBlockedUsers = (id)=>{
+    return new Promise((resolve, reject) => {
+        let sql = `SELECT bloklular FROM kullanicilar WHERE id = ${id}`;
+        con.query(sql, (err, result) => {
+            if (err) reject(err);
+            resolve(JSON.parse(result[0].bloklular));
+        });
+    });
+}
+
 module.exports = userModel;
