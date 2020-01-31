@@ -230,7 +230,7 @@ userModel.deleteFriend = async function (myId, itsId) {
     updateFriends(itsId, JSON.stringify(itsFriends));
 }
 
-userModel.getBlockedUsers = (id)=>{
+userModel.getBlockedUsers = (id) => {
     return new Promise((resolve, reject) => {
         let sql = `SELECT bloklular FROM kullanicilar WHERE id = ${id}`;
         con.query(sql, (err, result) => {
@@ -240,4 +240,27 @@ userModel.getBlockedUsers = (id)=>{
     });
 }
 
+userModel.blockUser = async (myId, sentId) => {
+    let myBlockeds = await userModel.getBlockedUsers(myId);
+    myBlockeds.push(sentId);
+    myBlockeds = JSON.stringify(myBlockeds);
+    return updateBlockUser(myId,myBlockeds);
+}
+
+function updateBlockUser(myId,blocked){
+    return new Promise((resolve, reject) => {
+        let sql = `UPDATE kullanicilar SET bloklular = "${blocked}" WHERE id = ${myId}`;
+        con.query(sql, (err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        });
+    });
+}
+
+userModel.calcelBlock = async(myId,itsId)=>{
+    let myBlockeds = await userModel.getBlockedUsers(myId);
+    myBlockeds.splice( (myBlockeds.indexOf(itsId)),1);
+    return updateBlockUser(myId,JSON.stringify(myBlockeds));
+}
 module.exports = userModel;
+

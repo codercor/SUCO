@@ -167,5 +167,16 @@ router.post('/deleteFriend/:username', auth, async (req, res) => {
 //FRIEND REQUESTS
 
 
+//BLOCK USER
+router.post('/block/:username', auth, async (req,res)=>{
+    let { myUserName, sentUserName, myId, sentUserId } = await getUsernamesAndIdes(req);
+    await userModel.blockUser(myId,sentUserId)
+    res.send(`${myUserName} kişisi ${sentUserName} kişisini engelledi.`);
+});
 
+router.post('/cancelBlock/:username', auth, async (req,res)=>{
+    let { myUserName, sentUserName, myId, sentUserId } = await getUsernamesAndIdes(req);
+    await userModel.calcelBlock(myId,sentUserId);
+    res.send(`${myUserName} kişisi ${sentUserName} kişisinin engelini kaldırdı.`);
+});
 module.exports = router;
