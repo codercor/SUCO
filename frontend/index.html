@@ -207,24 +207,144 @@ to get the desired effect
                                 </div>
                                 <!-- /.card-header -->
                                 <div class="card-body">
-                                    <form role="form">
+                                    <form role="form" action="" enctype="multipart/form-data" method="POST">
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <!-- textarea -->
                                                 <div class="form-group">
-                                                    <textarea class="form-control" rows="5"
+                                                    <div id="hisAlani"></div>
+
+
+                                                    <textarea id="metin" class="form-control" rows="5"
                                                         placeholder="Paylaş ..."></textarea>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-5">
-                                                <i class="fas fa-users ml-3"></i>
-                                                <i class="fas text-warning fa-smile ml-3 "></i>
-                                                <i class="fas fa-image ml-3"></i>
+                                                <i class="fas fa-users ml-3" id="kitleSec"></i>
+                                                <ul id="kitleler"
+                                                    style="position: absolute;z-index: 99999;display: none;"
+                                                    class="list-group list-group-item-action active col-md-9">
+                                                    <li kitle="herkes" class="list-group-item kitle">
+                                                        Herkese Açık
+                                                    </li>
+                                                    <li kitle="arkadas" class="list-group-item kitle">
+                                                        Arkadaşlar
+                                                    </li>
+                                                </ul>
+                                                <i class="fas text-warning fa-smile ml-3 " id="duyguSec"></i>
+                                                <i class="fas fa-image ml-3" id="resimSec"></i>
+                                                <div id="duygular"
+                                                    style="position: absolute;z-index: 99999;display: none;"
+                                                    class="col-md-12">
+                                                    <div class="card card-outline card-warning">
+                                                        <div class="card-body">
+                                                            <ul class="list-group list-group-item-action active">
+                                                                <button
+                                                                    class="list-group-item his list-group-item-action">Mutlu
+                                                                    😁</button>
+                                                                <button
+                                                                    class="list-group-item his list-group-item-action">Mutsuz
+                                                                    ☹ </button>
+                                                                <button
+                                                                    class="list-group-item his list-group-item-action">Endişeli😟
+                                                                </button>
+                                                                <button
+                                                                    class="list-group-item his list-group-item-action">Çılgın
+                                                                    🤪 </button>
+                                                                <button
+                                                                    class="list-group-item his list-group-item-action">Hasta
+                                                                    🤢 </button>
+                                                                <button
+                                                                    class="list-group-item his list-group-item-action">Gülmekten
+                                                                    Kırılmış 🤣 </button>
+                                                                <button
+                                                                    class="list-group-item his list-group-item-action">Sinirli
+                                                                    😡 </button>
+                                                                <button
+                                                                    class="list-group-item his list-group-item-action">Keyfi
+                                                                    Yerinde 🤗 </button>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <input type="file" style="display: none;" name="" id="resimler">
                                             </div>
-                                            <button class="btn btn-primary ml-auto">Paylaş</button>
+                                            <button id="paylas" class="btn btn-primary ml-auto">Paylaş</button>
                                         </div>
+                                        <script>
+                                            let resimSec = document.getElementById("resimSec");
+                                            let inputElement = document.getElementById("resimler");
+                                            let metin = document.getElementById("metin");
+                                            let duyguSec = document.getElementById('duyguSec');
+                                            let duygularList = document.getElementById('duygular')
+                                            let duygu = "";
+                                            let duyguButonlari = Array.from(document.getElementsByClassName("his"));
+                                            let kitleButonlari = Array.from(document.getElementsByClassName("kitle"));
+                                            let kitleler = document.getElementById("kitleler");
+                                            let kitleSec = document.getElementById("kitleSec");
+                                            let arkadaslarMi = true;
+                                            let paylas = document.getElementById("paylas");
+                                            duyguButonlari.forEach((buton) => {
+                                                buton.addEventListener("click", (e) => {
+                                                    e.preventDefault();
+                                                    duygularList.style.display = "none";
+                                                    duygu = e.target.innerHTML;
+                                                    document.getElementById("hisAlani").innerHTML = `<div class="badge badge-primary">${duygu} Hissediyor  <div id="duyguSil" class="badge badge-danger">x</div> </div> `;
+                                                    document.getElementById("duyguSil").addEventListener('click', () => {
+                                                        document.getElementById("hisAlani").innerHTML = "";
+                                                    });
+                                                });
+                                            });
+
+                                            paylas.addEventListener("click", (e) => {
+                                                e.preventDefault();
+                                                let formData = new FormData();
+
+                                                formData.append('text', metin.value);
+                                                formData.append('file', inputElement.files[0]);
+                                                formData.append("duygu", duygu);
+                                                formData.append("kitle", arkadaslarMi);
+                                                console.log(formData.get("text"), formData.get("file"), formData.get("duygu"), formData.get("kitle"));
+                                            });
+
+                                            kitleButonlari.forEach((buton) => {
+                                                buton.addEventListener("click", (e) => {
+
+                                                    kitleler.style.display = "none";
+                                                    kitle = e.target.getAttribute("kitle");
+                                                    if (kitle === "arkadas") {
+                                                        kitleSec.classList.remove("fa-globe")
+                                                        kitleSec.classList.add("fa-users")
+                                                        arkadaslarMi = true;
+                                                    } else {
+                                                        kitleSec.classList.remove("fa-users")
+                                                        kitleSec.classList.add("fa-globe")
+                                                        arkadaslarMi = false;
+                                                    }
+                                                });
+                                            });
+
+                                            duyguSec.addEventListener("click", () => {
+                                                if (duygularList.style.display == "block") duygularList.style.display = "none";
+                                                else duygularList.style.display = "block";
+                                            });
+                                            kitleSec.addEventListener("click", () => {
+                                                if (kitleler.style.display == "block") kitleler.style.display = "none";
+                                                else kitleler.style.display = "block";
+                                            });
+
+
+                                            resimSec.addEventListener("click", () => {
+                                                inputElement.click();
+                                                inputElement.onchange = function () {
+
+                                                    // RESİM GÖSTERİLECEK
+
+                                                }
+                                            });
+                                        </script>
                                     </form>
                                 </div>
                                 <!-- /.card-body -->
@@ -416,7 +536,7 @@ to get the desired effect
                             <h3 class="card-title">Şükrü Ünlü</h3>
 
                             <div class="card-tools">
-                                
+
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
                                         class="fas fa-minus"></i>
                                 </button>
@@ -465,7 +585,7 @@ to get the desired effect
                             </div>
                             <!--/.direct-chat-messages-->
 
-                          
+
                             <!-- /.direct-chat-pane -->
                         </div>
                         <!-- /.card-body -->
@@ -594,8 +714,7 @@ to get the desired effect
                         <div class="card-footer">
                             <form action="#" method="post">
                                 <div class="input-group">
-                                    <input type="text" name="message" placeholder="Arkadaş Ara..."
-                                        class="form-control">
+                                    <input type="text" name="message" placeholder="Arkadaş Ara..." class="form-control">
                                 </div>
                             </form>
                         </div>
