@@ -5,7 +5,7 @@ module.exports = async function(req,res,next) {
          jwt.verify(token,require("./config").api_secret_key);   
          next(); 
     } catch (error) {
-        res.send("Giriş Yap")
+        res.json({login: "failed"})
     }
     
 }

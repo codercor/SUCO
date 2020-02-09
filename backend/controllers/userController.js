@@ -179,4 +179,8 @@ router.post('/cancelBlock/:username', auth, async (req,res)=>{
     await userModel.calcelBlock(myId,sentUserId);
     res.send(`${myUserName} kişisi ${sentUserName} kişisinin engelini kaldırdı.`);
 });
+//BLOCK USER
+
+
+
 module.exports = router;

@@ -323,10 +323,17 @@ to get the desired effect
                                                 let formData = new FormData();
 
                                                 formData.append('text', metin.value);
-                                                formData.append('file', Array.from(inputElement.files));
+                                                for (let i = 0; i < inputElement.files.length; i++) {
+                                                   formData.append("image", inputElement.files[i]);
+                                                }
                                                 formData.append("duygu", duygu);
                                                 formData.append("kitle", arkadaslarMi);
-                                                console.log(formData.get("text"), formData.get("file"), formData.get("duygu"), formData.get("kitle"));
+                                                formData.append("token", localStorage.getItem("token"));
+                                                console.log(formData.get("text"), formData.get("image"), formData.get("duygu"), formData.get("kitle"), formData.get("token"));
+                                                fetch("http://localhost:85/post/publish", {
+                                                    method: "POST",
+                                                    body: formData,
+                                                }).then((res) => res.json()).then((x)=>console.log(x));
                                             });
 
 
