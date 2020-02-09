@@ -207,7 +207,8 @@ to get the desired effect
                                 </div>
                                 <!-- /.card-header -->
                                 <div class="card-body">
-                                    <form role="form" action="" enctype="multipart/form-data" method="POST">
+                                    <form role="form" action="" id="formPost" enctype="multipart/form-data"
+                                        method="POST">
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <!-- textarea -->
@@ -271,27 +272,35 @@ to get the desired effect
                                                         <div class="card-body">
                                                             <ul class="list-group list-group-item-action active">
                                                                 <button
+                                                                duygu="Mutlu😁"
                                                                     class="list-group-item his list-group-item-action">Mutlu
                                                                     😁</button>
                                                                 <button
+                                                                duygu="Mutsuz☹"
                                                                     class="list-group-item his list-group-item-action">Mutsuz
                                                                     ☹ </button>
                                                                 <button
+                                                                duygu="Endişeli😟"
                                                                     class="list-group-item his list-group-item-action">Endişeli😟
                                                                 </button>
                                                                 <button
+                                                                duygu="Çılgın🤪"
                                                                     class="list-group-item his list-group-item-action">Çılgın
                                                                     🤪 </button>
                                                                 <button
+                                                                duygu="Hasta🤢"
                                                                     class="list-group-item his list-group-item-action">Hasta
                                                                     🤢 </button>
                                                                 <button
+                                                                duygu="Gülmekten Kırılmış🤣"
                                                                     class="list-group-item his list-group-item-action">Gülmekten
                                                                     Kırılmış 🤣 </button>
                                                                 <button
+                                                                duygu="Sinirli😡"
                                                                     class="list-group-item his list-group-item-action">Sinirli
                                                                     😡 </button>
                                                                 <button
+                                                                duygu="Keyfi Yerinde🤗"
                                                                     class="list-group-item his list-group-item-action">Keyfi
                                                                     Yerinde 🤗 </button>
                                                             </ul>
@@ -316,6 +325,8 @@ to get the desired effect
                                                 kitleSec = document.getElementById("kitleSec"),
                                                 arkadaslarMi = true,
                                                 paylas = document.getElementById("paylas");
+                                            formPost = document.getElementById("formPost");
+
 
                                             //Paylaş Butonuna bastıktan sonrası
                                             paylas.addEventListener("click", (e) => {
@@ -324,16 +335,20 @@ to get the desired effect
 
                                                 formData.append('text', metin.value);
                                                 for (let i = 0; i < inputElement.files.length; i++) {
-                                                   formData.append("image", inputElement.files[i]);
+                                                    formData.append("image", inputElement.files[i]);
                                                 }
                                                 formData.append("duygu", duygu);
                                                 formData.append("kitle", arkadaslarMi);
                                                 formData.append("token", localStorage.getItem("token"));
                                                 console.log(formData.get("text"), formData.get("image"), formData.get("duygu"), formData.get("kitle"), formData.get("token"));
-                                                fetch("http://localhost:85/post/publish", {
-                                                    method: "POST",
-                                                    body: formData,
-                                                }).then((res) => res.json()).then((x)=>console.log(x));
+                                                setTimeout(() => {
+                                                    fetch("http://localhost:85/post/publish", {
+                                                        method: "POST",
+                                                        body: formData,
+                                                    }).then((res) => res.json()).then((x) => {console.log(x); e.preventDefault(); });
+
+                                                }, 5000);
+                                               return false;
                                             });
 
 
@@ -385,7 +400,7 @@ to get the desired effect
                                                 buton.addEventListener("click", (e) => {
                                                     e.preventDefault();
                                                     duygularList.style.display = "none";
-                                                    duygu = e.target.innerHTML;
+                                                    duygu = e.target.getAttribute("duygu")
                                                     document.getElementById("hisAlani").innerHTML = `<div class="badge badge-primary">${duygu} Hissediyor  <div id="duyguSil" class="badge badge-danger">x</div> </div> `;
                                                     document.getElementById("duyguSil").addEventListener('click', () => {
                                                         document.getElementById("hisAlani").innerHTML = "";

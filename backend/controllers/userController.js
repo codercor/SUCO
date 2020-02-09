@@ -72,11 +72,9 @@ router.post('/updatePP', async (req, res) => {
                 let photoName = token.userName + userId + '.' + req.file.originalname.split('.')[1];
                 fs.renameSync(req.file.path, req.file.destination + photoName);
                 await userModel.updatePP(userId, '/userpp/' + photoName);
-                res.send(`<img src="/userpp/${photoName}" />`);
-                //res.json({ update: "successfull", src:'/userpp/' + photoName})
-
+                res.json({ update: "successfull", src:'/userpp/' + photoName})
             } catch (error) {
-                fs.unlinkSync(req.file.path);
+                fs.unlinkSync(req.file.path); //dosyayı
                 res.send("Giriş Yap");
             }
         }
