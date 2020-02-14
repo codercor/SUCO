@@ -271,36 +271,28 @@ to get the desired effect
                                                     <div class="card card-outline card-warning">
                                                         <div class="card-body">
                                                             <ul class="list-group list-group-item-action active">
-                                                                <button
-                                                                duygu="Mutlu😁"
+                                                                <button duygu="0"
                                                                     class="list-group-item his list-group-item-action">Mutlu
                                                                     😁</button>
-                                                                <button
-                                                                duygu="Mutsuz☹"
+                                                                <button duygu="1"
                                                                     class="list-group-item his list-group-item-action">Mutsuz
                                                                     ☹ </button>
-                                                                <button
-                                                                duygu="Endişeli😟"
+                                                                <button duygu="2"
                                                                     class="list-group-item his list-group-item-action">Endişeli😟
                                                                 </button>
-                                                                <button
-                                                                duygu="Çılgın🤪"
+                                                                <button duygu="3"
                                                                     class="list-group-item his list-group-item-action">Çılgın
                                                                     🤪 </button>
-                                                                <button
-                                                                duygu="Hasta🤢"
+                                                                <button duygu="4"
                                                                     class="list-group-item his list-group-item-action">Hasta
                                                                     🤢 </button>
-                                                                <button
-                                                                duygu="Gülmekten Kırılmış🤣"
+                                                                <button duygu="5"
                                                                     class="list-group-item his list-group-item-action">Gülmekten
                                                                     Kırılmış 🤣 </button>
-                                                                <button
-                                                                duygu="Sinirli😡"
+                                                                <button duygu="6"
                                                                     class="list-group-item his list-group-item-action">Sinirli
                                                                     😡 </button>
-                                                                <button
-                                                                duygu="Keyfi Yerinde🤗"
+                                                                <button duygu="7"
                                                                     class="list-group-item his list-group-item-action">Keyfi
                                                                     Yerinde 🤗 </button>
                                                             </ul>
@@ -338,17 +330,17 @@ to get the desired effect
                                                     formData.append("image", inputElement.files[i]);
                                                 }
                                                 formData.append("duygu", duygu);
-                                                formData.append("kitle", arkadaslarMi);
+                                                formData.append("kitle", (() => { if (arkadaslarMi) return 1; else return 0; })());
                                                 formData.append("token", localStorage.getItem("token"));
                                                 console.log(formData.get("text"), formData.get("image"), formData.get("duygu"), formData.get("kitle"), formData.get("token"));
                                                 setTimeout(() => {
                                                     fetch("http://localhost:85/post/publish", {
                                                         method: "POST",
                                                         body: formData,
-                                                    }).then((res) => res.json()).then((x) => {console.log(x); e.preventDefault(); });
+                                                    }).then((res) => res.json()).then((x) => { console.log(x); e.preventDefault(); });
 
                                                 }, 5000);
-                                               return false;
+                                                return false;
                                             });
 
 

@@ -5,6 +5,7 @@ const router = require("express").Router(),
     fs = require("fs"),
     postModel = require("../models/postModel"),
     userModel = require("../models/userModel"),
+    userController = require("./userController"),
     storage = multer.diskStorage({
         destination: (req, file, cb) => {
             cb(null, 'public/postImages/')
@@ -35,15 +36,42 @@ router.post('/publish', (req, res) => {
             console.log(req.body.kitle);
             
             postModel.publishPost(myId,req.body.text,JSON.stringify(images),req.body.duygu,zaman,req.body.kitle);
-            res.json({deneme:"OK"});
+            res.json({publish:"OK"});
         } catch (error) {
             req.files.forEach((file)=>{
                 fs.unlinkSync(file.path);
             });
             res.json({ login: "failed" })
         }
-
     });
 });
 
+
+router.get("/:id",async (req,res)=>{
+    let postId = req.params.id;
+    let postData = await postModel.getPostById(postId);
+   res.send(postData);
+});
+
+router.post('/like/:id', auth, async(req,res)=>{
+    let postId = req.params.id;
+    let myId = await getIdbyUserName(req);
+    let status = await postModel.likePost(myId,postId);
+    res.send(status)
+});
+
+router.post('/comment/:id',auth, async(req,res)=>{
+    let postId = req.params.id;
+    let myId = await getIdbyUserName(req);
+    let comment = req.body.comment;
+    console.log( postId, {myId,comment} );
+    
+});
+
+async function getIdbyUserName(req) {
+    let myUserName = jwt.verify(req.body.token, require("../config").api_secret_key).userName;
+    let myId = await userModel.getIdbyUserName(myUserName);
+    return myId;
+}
 module.exports = router;
+
