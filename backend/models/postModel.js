@@ -54,25 +54,74 @@ postModel.likePost = async function (myId, postId) {
     });
 }
 function getCommentsByPostId(postId) {
-    return new Promise((resolve,reject)=>{
+    return new Promise((resolve, reject) => {
         let sql = `SELECT yorumlar FROM gonderiler WHERE id = ${postId}`;
-        con.query(sql,(err,result)=>{
-          if(err)reject(err);
-          else resolve(result[0].yorumlar);
-        });   
+        con.query(sql, (err, result) => {
+            if (err) reject(err);
+            else resolve(result[0].yorumlar);
+        });
     });
 }
 
-postModel.sendComment = async function(postId, commentData) {
-    let updatedComments = [];
-  return new Promise((resolve,reject)=>{
-      let sql = `UPDATE gonderiler SET yorumlar = "${commentData}" WHERE id = postId`;
-      con.query(sql,(err,result)=>{
-        if(err)reject(err);
-        else resolve(result)
-      });   
-  });
-  //burada kaldık devam edecek...
+postModel.sendComment = async function (postId, commentData) {
+    let postsComments = await getCommentsByPostId(postId);
+    postsComments = commentParse(postsComments);
+    postsComments.push(commentData);
+    postsComments = commentStringfy(postsComments);
+    return new Promise((resolve, reject) => {
+        let sql = `UPDATE gonderiler SET yorumlar = '${postsComments}' WHERE id = ${postId}`;
+        con.query(sql, (err, result) => {
+            if (err) reject(err);
+            else resolve(result)
+        });
+    });
 }
 
+postModel.deleteComment = async function(postId, commentData) {
+    let postsComments =   commentParse(await getCommentsByPostId(postId));  
+    postsComments = commentStringfy2(postsComments);
+    commentData = commentStringfy2([commentData])[0];
+    let commentIndex = postsComments.indexOf(commentData);
+    postsComments.splice(commentIndex,1);
+    let resultComment = "[";
+    postsComments.forEach((el,index)=>{
+        if(index != postsComments.length-1)resultComment += el + ",";
+        else resultComment += el;
+    });
+    resultComment += "]";
+    return new Promise((resolve,reject)=>{
+        let sql = `UPDATE gonderiler SET yorumlar = '${resultComment}' WHERE id = ${postId}`;
+        con.query(sql,(err,result)=>{
+            if(err) reject(err);
+            else resolve(result);
+        })
+    });
+}
+
+function commentParse(comment) {
+    let arrData;
+    eval("arrData =" + comment)
+    return arrData;
+}
+
+function commentStringfy(comment) {
+    let stringData = "[";
+    comment.forEach((el, index) => {
+        el.myId = `${el.myId}`;
+        if (index == comment.length - 1) stringData += `{ "myId":"${el.myId}", "comment":"${el.comment}" }`;
+        else stringData += `{ "myId":"${el.myId}", "comment":"${el.comment}" },`;
+    });
+    stringData += "]";
+    return stringData;
+}
+
+function commentStringfy2(comment) {
+    let convertedArray = [];
+    comment.forEach((el, index) => {
+        el.myId = `${el.myId}`;
+         convertedArray.push(`{ "myId":"${el.myId}", "comment":"${el.comment}" }`);
+    });
+    return convertedArray;
+    
+}
 module.exports = postModel;

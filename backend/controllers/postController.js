@@ -60,12 +60,18 @@ router.post('/like/:id', auth, async(req,res)=>{
     res.send(status)
 });
 
-router.post('/comment/:id',auth, async(req,res)=>{
+router.post('/sendComment/:id',auth, async(req,res)=>{
     let postId = req.params.id;
     let myId = await getIdbyUserName(req);
     let comment = req.body.comment;
-    console.log( postId, {myId,comment} );
-    
+    await postModel.sendComment(postId, {myId,comment});
+    res.sendStatus(200)
+});
+
+router.post('/deleteComment/:id', auth, async(req,res)=>{
+    let postId = req.params.id;
+    let commentData = req.body.commentData;
+    res.send(await postModel.deleteComment(postId,commentData));
 });
 
 async function getIdbyUserName(req) {
