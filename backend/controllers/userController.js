@@ -1,10 +1,11 @@
 const router = require('express').Router();
 const userModel = require('../models/userModel');
+const postModel = require('../models/postModel');
 let jwt = require('jsonwebtoken'),
     fs = require('fs'),
     auth = require('../authCheck'),
     multer = require('multer'),
-    blockCheck=require('../blockCheck'),
+    blockCheck = require('../blockCheck'),
     ppDiscStorage = multer.diskStorage({
         destination: function (req, file, callback) {
             callback(null, 'public/userpp/');
@@ -72,7 +73,7 @@ router.post('/updatePP', async (req, res) => {
                 let photoName = token.userName + userId + '.' + req.file.originalname.split('.')[1];
                 fs.renameSync(req.file.path, req.file.destination + photoName);
                 await userModel.updatePP(userId, '/userpp/' + photoName);
-                res.json({ update: "successfull", src:'/userpp/' + photoName})
+                res.json({ update: "successfull", src: '/userpp/' + photoName })
             } catch (error) {
                 fs.unlinkSync(req.file.path); //dosyayı
                 res.send("Giriş Yap");
@@ -109,17 +110,28 @@ router.post('/updateCP', async (req, res) => {
 
 });
 
-router.post('/:username', auth,blockCheck, async (req, res) => {
+router.post('/:username', auth, blockCheck, async (req, res) => {
     let username = req.params.username;
     let data = await userModel.getUserByUserName(username);
     let tokenUserName = jwt.verify(req.body.token, require("../config").api_secret_key);
+    let itsId = await userModel.getIdbyUserName(username);
+    let myId = await userModel.getIdbyUserName(tokenUserName.userName);
+    let itsPosts = await postModel.getPostsByUserId(itsId);
+
+    let myFriends = await userModel.getFriends(myId);
     if (tokenUserName.userName == username) {
-        Object.assign(data[0], data[0], { myProfile: true })
-        res.json(data[0])
+        Object.assign(data[0], data[0], { myProfile: true ,friend: true, posts: itsPosts})
     } else {
+      
+        if (myFriends.includes(itsId)) {
+            Object.assign(data[0], data[0], { friend: true, posts: itsPosts });
+        } else {
+            Object.assign(data[0], data[0], {friend: false, posts: itsPosts.filter((post) => { if (post.gizlilik == 0) return post; })});
+        }
+       
+        }
         res.json(data[0]);
-    }
-});
+    });
 
 async function getUsernamesAndIdes(req) {
     let myUserName = jwt.verify(req.body.token, require("../config").api_secret_key).userName;
@@ -159,22 +171,22 @@ router.post('/cancelFriendRequest/:username', auth, async (req, res) => {
 
 router.post('/deleteFriend/:username', auth, async (req, res) => {
     let { myUserName, sentUserName, myId, sentUserId } = await getUsernamesAndIdes(req);
-    await userModel.deleteFriend(myId,sentUserId);
+    await userModel.deleteFriend(myId, sentUserId);
     res.send(`${myUserName} kişisi ${sentUserName} kişisini arkadaşlıktan çıkardı.`);
 });
 //FRIEND REQUESTS
 
 
 //BLOCK USER
-router.post('/block/:username', auth, async (req,res)=>{
+router.post('/block/:username', auth, async (req, res) => {
     let { myUserName, sentUserName, myId, sentUserId } = await getUsernamesAndIdes(req);
-    await userModel.blockUser(myId,sentUserId)
+    await userModel.blockUser(myId, sentUserId)
     res.send(`${myUserName} kişisi ${sentUserName} kişisini engelledi.`);
 });
 
-router.post('/cancelBlock/:username', auth, async (req,res)=>{
+router.post('/cancelBlock/:username', auth, async (req, res) => {
     let { myUserName, sentUserName, myId, sentUserId } = await getUsernamesAndIdes(req);
-    await userModel.calcelBlock(myId,sentUserId);
+    await userModel.calcelBlock(myId, sentUserId);
     res.send(`${myUserName} kişisi ${sentUserName} kişisinin engelini kaldırdı.`);
 });
 //BLOCK USER

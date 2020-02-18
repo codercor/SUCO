@@ -1,4 +1,5 @@
 const con = require("./connection");
+let userModel = require("./userModel");
 let postModel = {};
 
 postModel.publishPost = function (MyId, text, images, emotion, date, privacy) {
@@ -77,24 +78,51 @@ postModel.sendComment = async function (postId, commentData) {
     });
 }
 
-postModel.deleteComment = async function(postId, commentData) {
-    let postsComments =   commentParse(await getCommentsByPostId(postId));  
+postModel.deleteComment = async function (postId, commentData) {
+    let postsComments = commentParse(await getCommentsByPostId(postId));
     postsComments = commentStringfy2(postsComments);
     commentData = commentStringfy2([commentData])[0];
     let commentIndex = postsComments.indexOf(commentData);
-    postsComments.splice(commentIndex,1);
+    postsComments.splice(commentIndex, 1);
     let resultComment = "[";
-    postsComments.forEach((el,index)=>{
-        if(index != postsComments.length-1)resultComment += el + ",";
+    postsComments.forEach((el, index) => {
+        if (index != postsComments.length - 1) resultComment += el + ",";
         else resultComment += el;
     });
     resultComment += "]";
-    return new Promise((resolve,reject)=>{
+    return new Promise((resolve, reject) => {
         let sql = `UPDATE gonderiler SET yorumlar = '${resultComment}' WHERE id = ${postId}`;
-        con.query(sql,(err,result)=>{
-            if(err) reject(err);
+        con.query(sql, (err, result) => {
+            if (err) reject(err);
             else resolve(result);
         })
+    });
+}
+
+postModel.getHome = async function (id) {
+    // GET FRIEND'S POSTS
+    let friends = (await userModel.getFriends(id));
+    friends.push(id);
+    let posts = [];
+    await (new Promise(async (resolve, reject) => {
+        for (let i = 0; i < friends.length; i++) {
+           posts = posts.concat(await this.getPostsByUserId(friends[i]));
+        }
+        posts.sort((b,a)=>{
+            return a.id - b.id;
+        })
+        resolve(1);
+    }));
+    return posts;
+}
+
+postModel.getPostsByUserId = (userId) => {
+    return new Promise((resolve, reject) => {
+        let sql = `SELECT * FROM gonderiler WHERE paylasanId = ${userId}`;
+        con.query(sql, (err, result) => {
+            if (err) reject(err);
+            else resolve(result);
+        });
     });
 }
 
@@ -119,9 +147,9 @@ function commentStringfy2(comment) {
     let convertedArray = [];
     comment.forEach((el, index) => {
         el.myId = `${el.myId}`;
-         convertedArray.push(`{ "myId":"${el.myId}", "comment":"${el.comment}" }`);
+        convertedArray.push(`{ "myId":"${el.myId}", "comment":"${el.comment}" }`);
     });
     return convertedArray;
-    
+
 }
 module.exports = postModel;

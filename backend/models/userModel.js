@@ -126,7 +126,7 @@ function updateRequest(request, id) {
     });
 }
 
-function getFriends(id) {
+userModel.getFriends = function(id) {
     return new Promise((resolve, reject) => {
         let sql = `SELECT arkadaslar FROM kullanicilar WHERE id = ${id}`;
         con.query(sql, (err, result) => {
@@ -171,8 +171,8 @@ userModel.acceptFriendRequest = async function (myId, ItsId) {
     myRequests = convertJS(myRequests);
 
     let myFriends, itsFriends;
-    myFriends = await getFriends(myId);
-    itsFriends = await getFriends(ItsId);
+    myFriends = await this.getFriends(myId);
+    itsFriends = await this.getFriends(ItsId);
 
     if (myRequests.gelen.includes(ItsId) && itsRequests.gonderilen.includes(myId)) {
         let ItsIdIndex = myRequests.gelen.indexOf(ItsId);
@@ -218,8 +218,8 @@ userModel.cancelFriendRequest = async function (myId, ItsId) {
 }
 
 userModel.deleteFriend = async function (myId, itsId) {
-    let myFriends = await getFriends(myId);
-    let itsFriends = await getFriends(itsId);
+    let myFriends = await this.getFriends(myId);
+    let itsFriends = await this.getFriends(itsId);
     let itsIdIndex = myFriends.indexOf(itsId);
     let myIdIndex = itsFriends.indexOf(myFriends);
 

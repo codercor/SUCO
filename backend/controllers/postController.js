@@ -71,13 +71,19 @@ router.post('/sendComment/:id',auth, async(req,res)=>{
 router.post('/deleteComment/:id', auth, async(req,res)=>{
     let postId = req.params.id;
     let commentData = req.body.commentData;
-    res.send(await postModel.deleteComment(postId,commentData));
+    let status = await postModel.deleteComment(postId,commentData);
+    res.sendStatus(200);    
 });
-
+router.post('/home', auth, async(req,res)=>{
+    let id = await getIdbyUserName(req); 
+    res.send(await postModel.getHome(id))
+});
 async function getIdbyUserName(req) {
     let myUserName = jwt.verify(req.body.token, require("../config").api_secret_key).userName;
     let myId = await userModel.getIdbyUserName(myUserName);
     return myId;
 }
+
+
 module.exports = router;
 
