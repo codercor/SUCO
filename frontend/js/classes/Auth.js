@@ -16,6 +16,5 @@ class Auth {
             return { logged: false };
         }
     }
-
 }
 export default Auth;

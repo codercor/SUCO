@@ -74,9 +74,9 @@
         <div class="card">
             <div class="card-body login-card-body">
                 <p class="login-box-msg">Kayıt ol ve giriş yap</p>
-                <form action="../../index.html" method="post">
+                <form  method="post">
                     <div class="input-group mb-3">
-                      <input type="text" class="form-control" placeholder="Ad Soyad">
+                      <input type="text" id="name" class="form-control" placeholder="Ad Soyad">
                       <div class="input-group-append">
                         <div class="input-group-text">
                           <span class="fas fa-user"></span>
@@ -84,7 +84,7 @@
                       </div>
                     </div>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Kullanıcı Adı">
+                        <input type="text" id="username" class="form-control" placeholder="Kullanıcı Adı">
                         <div class="input-group-append">
                           <div class="input-group-text">
                             <span class="fas fa-user"></span>
@@ -92,7 +92,7 @@
                         </div>
                       </div>
                     <div class="input-group mb-3">
-                      <input type="email" class="form-control" placeholder="Eposta">
+                      <input type="email" id="email" class="form-control" placeholder="Eposta">
                       <div class="input-group-append">
                         <div class="input-group-text">
                           <span class="fas fa-envelope"></span>
@@ -100,7 +100,7 @@
                       </div>
                     </div>
                     <div class="input-group mb-3">
-                      <input type="password" class="form-control" placeholder="Şifre">
+                      <input type="password" id="password" class="form-control" placeholder="Şifre">
                       <div class="input-group-append">
                         <div class="input-group-text">
                           <span class="fas fa-lock"></span>
@@ -108,7 +108,7 @@
                       </div>
                     </div>
                     <div class="input-group mb-3">
-                      <input type="password" class="form-control" placeholder="Tekrar Şifre">
+                      <input type="password" id="repassword" class="form-control" placeholder="Tekrar Şifre">
                       <div class="input-group-append">
                         <div class="input-group-text">
                           <span class="fas fa-lock"></span>
@@ -119,9 +119,9 @@
 
                 <div class="social-auth-links text-center mb-3">
                     <p>- YADA -</p>
-                    <a href="#" class="btn btn-block btn-primary">
-                        <i class="fas fa-sign-in-alt"></i> Giriş Yap
-                    </a>
+                    <button  id="registerButton" class="btn btn-block btn-primary">
+                        <i class="fas fa-sign-in-alt"></i> Kayıt Ol
+                    </button>
                     <a href="#" class="btn btn-sm btn-block btn-info">
                         <i class="fas fa-key"></i>  Şifremi unuttum
                     </a>
@@ -134,7 +134,7 @@
         </div>
     </div>
     <!-- /.login-box -->
-
+    <script type="module" src="app.js"></script>
     <!-- jQuery -->
     <script src="plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
