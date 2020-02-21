@@ -11,14 +11,28 @@ async function registerUser(e) {
         email = document.getElementById("email").value,
         password = document.getElementById("password").value,
         repassword = document.getElementById("repassword").value,
-        userData = {name,username,email,password,repassword};
+        userData = { name, username, email, password, repassword };
     if (password != repassword) {
         alert("Şifreler eşleşmiyor");
         return;
     }
-    ValidateEmail(email);
+    if (!ValidateEmail(email)) {
+        return;
+    }
 
-    let registerStatus = await User.register(userData);
+    let msgBox = document.getElementsByClassName("login-box-msg")[0]
+    msgBox.style.color = "green";
+    msgBox.innerHTML = "Kaydınız alınıyor....";
+    let registerStatus;
+    setTimeout(async () => {
+        registerStatus = await User.register(userData);
+        if (!registerStatus.register) {
+            msgBox.style.color = "red";
+            msgBox.innerHTML = "Kayıtlı Kullanıcı....";
+        }
+
+    }, 1000);
+
 
 }
 function ValidateEmail(email) {

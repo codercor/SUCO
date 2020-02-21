@@ -1,4 +1,4 @@
-import Auth from "../classes/Auth.js";
+import User from "../classes/User.js";
 export default function () {
     // Click "Giriş Yap" button
     const loginButton = document.getElementById("loginButton");
@@ -13,9 +13,10 @@ async function loginButtonClick(e) {
 
     let username = document.getElementById("username").value,
         password = document.getElementById("password").value;
-    let login = await Auth.controlUser(username, password);
+    let login = await User.login(username, password);
     if (login.logged){
         localStorage.setItem("token",login.token);
+        localStorage.setItem("username",username);
         location.href = 'index.html';
     } 
     else alert("Yanlış!");

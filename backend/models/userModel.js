@@ -3,9 +3,10 @@ let userModel = {};
 
 
 userModel.register = async (user) => {
-    let check = await userModel.checkMail(user.eposta);
+    let checkMail = await userModel.checkMail(user.eposta),
+        checkUsername = await userModel.checkUsername(user.kullaniciAdi);
     // Kayıtlı mı diye kontrol et 
-    if (check.length > 0) {
+    if (checkMail.length > 0 || checkUsername.length > 0 ) {
         return new Promise((resolve, reject) => {
             // Kayıtlı ise gerekli cevabı ver
             resolve({ register: false, err: "registered" })
@@ -33,6 +34,17 @@ userModel.checkMail = (mail) => {
     });
 }
 
+// Verilen username adresi kayıtlı mı diye kontrol et
+userModel.checkUsername = (username) => {
+    return new Promise((resolve, reject) => {
+        let sql = `SELECT * FROM kullanicilar WHERE kullaniciAdi = "${username}"`;
+        con.query(
+            sql, (err, result) => {
+                if (err) reject(err)
+                resolve(result);
+            });
+    });
+}
 userModel.checkUser = (userName, password) => {
     return new Promise((resolve, reject) => {
         let sql = `SELECT * FROM kullanicilar WHERE kullaniciAdi = "${userName}" AND sifre="${password}"`;
