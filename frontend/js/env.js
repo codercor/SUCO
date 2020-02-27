@@ -5,7 +5,10 @@ export default {
             user:"/user/",
             login:`/user/login`,
             register:`/user/register`,
+            getIdByUsername: `/user/getIdByUsername`
         },
-        post:{}
+        post:{
+            home:"/post/home/",
+        }
     }
  }

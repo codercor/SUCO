@@ -1,5 +1,5 @@
 import env from '../env.js';
-import  { UserServices } from './Services.js';
+import  { Services } from './Services.js';
 class User {
     static async register(userData) {
         userData = {
@@ -14,7 +14,7 @@ class User {
         }
        
         userData = JSON.stringify(userData);
-        let response = await UserServices.postJson(env.routes.user.register,userData);
+        let response = await Services.postJson(env.routes.user.register,userData);
         response = await response.json();
         userData = JSON.parse(userData);
         if(response.register){
@@ -30,7 +30,7 @@ class User {
         
     }
     static async login(username, password) {
-        let response = await UserServices.postJson(env.routes.user.login,{ userName: username, password: password })
+        let response = await Services.postJson(env.routes.user.login,{ userName: username, password: password })
         response = await response.json();
         if (response.login == "successful") {
             return { logged: true, token: response.token };
@@ -43,7 +43,16 @@ class User {
         else { return false };
     }
     static async getUserData(username){
-        return await((await UserServices.postJson(env.routes.user.user + username,{})).json());
-    }   
+        return await((await Services.postJson(env.routes.user.user + username,{})).json());
+    } 
+    static async getHomePosts(token){
+        return await((await Services.postJson(env.routes.post.home,{})).json());
+    }
+    static async getUserNameById(id){
+        return await Services.postJson(env.routes.user.getIdByUsername, {id})
+    }
+    async init(username){
+        this.data = await User.getUserData(username);
+    }
 }
 export default User;

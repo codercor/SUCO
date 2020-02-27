@@ -7,7 +7,7 @@ let express = require('express');
     postController = require('./controllers/postController');
   
 app.use(cors());
-app.use('/static', express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

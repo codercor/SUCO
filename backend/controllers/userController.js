@@ -109,6 +109,9 @@ router.post('/updateCP', async (req, res) => {
     });
 
 });
+router.post('/getIdByUsername/', async (req,res)=>{
+    res.json({username :(await userModel.getUserNamebyId(req.body.id))});
+}) 
 
 router.post('/:username', auth, blockCheck, async (req, res) => {
     let username = req.params.username;

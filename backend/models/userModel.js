@@ -66,7 +66,16 @@ userModel.getIdbyUserName = (userName) => {
             });
     });
 }
-
+userModel.getUserNamebyId = (id) => {
+    return new Promise((resolve, reject) => {
+        let sql = `SELECT kullaniciAdi FROM kullanicilar WHERE id = "${id}"`;
+        con.query(
+            sql, (err, result) => {
+                if (err) reject(err)
+                resolve(result[0].kullaniciAdi);
+            });
+    });
+}
 userModel.updatePP = (id, ppPath) => {
     return new Promise((resolve, reject) => {
         let sql = `UPDATE kullanicilar SET profilResmi = "${ppPath}" WHERE id = ${id}`;
