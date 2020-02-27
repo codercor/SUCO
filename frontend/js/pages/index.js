@@ -1,18 +1,23 @@
 import User from '../classes/User.js';
 import Dom from '../classes/Dom.js';
 
-export default async ()=>{
+export default async () => {
     const myUsername = localStorage.getItem("username");
     const token = localStorage.getItem("token");
-    if(!User.checkToken()) location.href = "login.html";
+    if (!User.checkToken()) location.href = "login.html";
     let userData = await User.getUserData(myUsername);
     console.log(userData);
-    Dom.standartRender(userData); 
+    Dom.standartRender(userData);
     let homePosts = await User.getHomePosts(token);
-    homePosts.forEach(post => {
-        Dom.postRender(post);
+
+    await new Promise(async (resolve, reject) => {
+        for (let i = 0; i < homePosts.length; i++) {
+            await Dom.postRender(homePosts[i]);
+        }
+        resolve();
     });
-    
+
+    Dom.setHomeEvents();
     console.log(homePosts);
-    
+
 }
