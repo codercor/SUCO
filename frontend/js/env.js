@@ -9,6 +9,7 @@ export default {
         },
         post:{
             home:"/post/home/",
+            like:"/post/like/"
         }
     }
  }
