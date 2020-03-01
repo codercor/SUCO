@@ -47,8 +47,8 @@ router.post('/publish', (req, res) => {
 });
 
 
-router.get("/:id",async (req,res)=>{
-    let postId = req.params.id;
+router.post("/",auth,async (req,res)=>{
+    let postId = req.body.id;
     let postData = await postModel.getPostById(postId);
    res.send(postData);
 });

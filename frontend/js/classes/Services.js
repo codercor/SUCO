@@ -14,5 +14,8 @@ export class Services {
             },
         });
     }
+    static async getPostData(postId){
+       return (await (await Services.postJson(env.routes.post.post, { id: postId })).json());
+    }
 }
 

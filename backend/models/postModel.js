@@ -17,7 +17,9 @@ postModel.getPostById = function (id) {
         let sql = `SELECT * FROM gonderiler WHERE id = ${id}`;
         con.query(sql, (err, result) => {
             if (err) reject(err);
-            else resolve(result);
+            else {
+                result.yorumlar = commentParse(result.yorumlar);
+                resolve(result);}
         });
     });
 }
@@ -31,7 +33,8 @@ async function getPeopleWhoLike(postId) {
             else resolve(result);
         });
     }));
-
+    console.log(peopleWhoLike);
+    
     return peopleWhoLike[0].begenenler;
 }
 

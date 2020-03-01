@@ -8,8 +8,10 @@ export default {
             getIdByUsername: `/user/getIdByUsername`
         },
         post:{
+            post:'/post/',
             home:"/post/home/",
-            like:"/post/like/"
+            like:"/post/like/",
+            sendComment:"/post/sendComment/"
         }
     }
  }

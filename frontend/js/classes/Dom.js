@@ -19,35 +19,55 @@ export default class Dom {
         let likeButtons = Array.from(document.getElementsByClassName("like-button"));
 
         likeButtons.forEach(el => {
-            el.addEventListener("click",async (e)=>{
+            el.addEventListener("click", async (e) => {
                 let postId = e.target.getAttribute("postId");
-                console.log(postId + "Bekleniyor");
-                await Services.postJson(env.routes.post.like + postId );
-                console.log(postId + "Beklendi");
-                
+                this.updatePostCounters(postId);
             });
         });
 
         commentForms.forEach(el => {
-            el.addEventListener("keydown", (e) => {
-                alert("dada")
-                //Burada Kaldık....
+            el.addEventListener("keydown",async (e) => {
+                if (e.key == "Enter") {
+                    let postId = e.target.getAttribute("postId");
+                    let comment = e.target.value;
+                    if(comment == "") return;
+                    await Services.postJson(env.routes.post.sendComment + postId,{comment});
+                    this.updatePostCounters(postId);
+                    this.updatePostComments(postId);
+                    e.target.value = "";
+                }
             });
         });
+    }
+    static async updatePostComments(postId){
+       
+       let thisPost = (await Services.getPostData(postId))[0];
+       let thisComments = document.querySelector(`div[postcommentsbyid="${postId}"]`);
+       thisComments.innerHTML = await this.commentRender(thisPost.yorumlar);
+       
+       
+    }
+    static async updatePostCounters(postId) {
+        await Services.postJson(env.routes.post.like + postId);
+        let thisPost = await Services.getPostData(postId);
+        let liveLikeCounter = (eval(thisPost[0].begenenler)).length;
+        let liveCommentCounter = (eval(thisPost[0].yorumlar)).length;
+        let postDom = document.querySelector(`span[counterforbyid="${postId}"]`)
+        postDom.innerHTML = `${liveLikeCounter} Suco - ${liveCommentCounter} Yorum`;
     }
     static async postRender(postData) {
         let postsPlace = document.getElementById("postsPlace");
         postData.resim = Adapters.postImageAdapter(postData.resim);
         let user = new User();
         let username = (await User.getUserNameById(postData.paylasanId)).username;
-        
+
         await user.init(username);
         let header = `<div class="card card-widget offset-md-2 col-md-8">
         <div class="card-header">
             <div class="user-block">
                 <img class="img-circle" src="${env.host + user.data.profilResmi}" alt="User Image">
                 <span class="username"><a href="#">${user.data.adSoyad}</a></span>
-                <span class="description">${ (function () { if (postData.gizlilik == 1) return "Arkadaşlar"; else return "Herkese Açık"; })()} - ${postData.tarih}</span>
+                <span class="description" >${ (function () { if (postData.gizlilik == 1) return "Arkadaşlar"; else return "Herkese Açık"; })()} - ${postData.tarih}</span>
             </div>
             <!-- /.user-block -->
             <div class="card-tools">
@@ -61,7 +81,7 @@ export default class Dom {
             <!-- /.card-tools -->
         </div>
         <!-- /.card-header -->`;
-        let footer = `<div class="card-footer card-comments" style="display: block;">
+        let footer = `<div class="card-footer card-comments" postCommentsById="${postData.id}" style="display: block;">
         ${await Dom.commentRender(postData.yorumlar)}
         </div>
         <!-- /.card-footer -->
@@ -69,7 +89,7 @@ export default class Dom {
                 <img class="img-fluid img-circle img-sm" src="${env.host + user.data.profilResmi}" alt="Alt Text">
                 <!-- .img-push is used to add margin to elements next to floating images -->
                 <div class="img-push">
-                    <input type="text" class="form-control form-control-sm comment-form" placeholder="Yorum bırak...">
+                    <input type="text" postId = ${postData.id} class="form-control form-control-sm comment-form" placeholder="Yorum bırak...">
                 </div>
         </div>
         <!-- /.card-footer --></div>`;
@@ -79,11 +99,11 @@ export default class Dom {
         <p>${postData.metin}</p>
         <button type="button" postId="${postData.id}" class="btn btn-default btn-sm"><i class="fas fa-share"></i>Paylaş</button>
         <button type="button" postId="${postData.id}" class="btn btn-default btn-sm like-button"><i class="fas fa-heart"></i>Suco</button>
-        <span class="float-right text-muted">${ eval(postData.begenenler).length} Suco - ${eval(postData.yorumlar).length} Yorum</span>
+        <span class="float-right text-muted" counterForById="${postData.id}">${eval(postData.begenenler).length} Suco - ${eval(postData.yorumlar).length} Yorum</span>
     </div>
     <!-- /.card-body -->
 `;
-            postsPlace.innerHTML += header +noImagePostTemp + footer;
+            postsPlace.innerHTML += header + noImagePostTemp + footer;
         }
         if (postData.resim.length == 1) {
             let singleImagePostTemp = `
@@ -95,7 +115,7 @@ export default class Dom {
                 Paylaş</button>
             <button type="button" postId="${postData.id}" class="btn btn-default btn-sm like-button"><i class="fas fa-heart"></i>
                 Suco</button>
-            <span class="float-right text-muted">${ eval(postData.begenenler).length} Suco - ${eval(postData.yorumlar).length} Yorum</span>
+            <span class="float-right text-muted" counterForById="${postData.id}">${eval(postData.begenenler).length} Suco - ${eval(postData.yorumlar).length} Yorum</span>
         </div>
         <!-- /.card-body -->
         
@@ -114,7 +134,7 @@ export default class Dom {
                 <button type="button" postId="${postData.id}" class="btn btn-default btn-sm"><i class="fas fa-share"></i>Paylaş</button>
                 <button type="button" postId="${postData.id}" class="btn btn-default btn-sm like-button"><i class="fas fa-heart"></i>Suco</button>
 
-                <span class="float-right text-muted">${ eval(postData.begenenler).length} Suco - ${eval(postData.yorumlar).length} Yorum</span>
+                <span class="float-right text-muted" counterForById="${postData.id}">${eval(postData.begenenler).length} Suco - ${eval(postData.yorumlar).length} Yorum</span>
             </div>
             <!-- /.card-body -->
             
