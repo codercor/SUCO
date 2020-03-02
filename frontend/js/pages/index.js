@@ -18,6 +18,5 @@ export default async () => {
     });
 
     Dom.setHomeEvents();
-    console.log(homePosts);
 
 }

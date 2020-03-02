@@ -150,8 +150,8 @@ export default class Dom {
                 let user = new User();
                 user.username = (await User.getUserNameById(commentData[i].myId)).username;
                 await user.init(user.username)
-                console.log(commentData[i]);
-                console.log(user);
+                //console.log(commentData[i]);
+                //console.log(user);
                 commentsResult += `  <div class="card-comment">
                 <!-- User image -->
                 <img class="img-circle img-sm" src="${env.host + user.data.profilResmi}" alt="User Image">
