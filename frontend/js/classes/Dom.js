@@ -14,38 +14,72 @@ export default class Dom {
             el.src = env.host + data.profilResmi;
         });
     }
-    static setHomeEvents() {
+    static loading(status) {
+        let postsPlace = document.getElementById("postsPlace");
+        let loadingBox = document.getElementById("loading");
+        if (status == true) {
+            loadingBox.style.display = "block";
+            postsPlace.style.display = "none";
+        } else {
+            loadingBox.style.display = "none";
+            postsPlace.style.display = "block";
+        }
+    }
+    static async setHomeEvents() {
         let commentForms = Array.from(document.getElementsByClassName("comment-form"));
         let likeButtons = Array.from(document.getElementsByClassName("like-button"));
+        let commentDeleteButtons = Array.from(document.getElementsByClassName("commentDelete"));
 
-        likeButtons.forEach(el => {
-            el.addEventListener("click", async (e) => {
+
+        for (let i = 0; i < likeButtons.length; i++) {
+            likeButtons[i].addEventListener("click", async (e) => {
                 let postId = e.target.getAttribute("postId");
                 this.updatePostCounters(postId);
             });
-        });
+        }
 
-        commentForms.forEach(el => {
-            el.addEventListener("keydown",async (e) => {
+        for (let i = 0; i < commentForms.length; i++) {
+            commentForms[i].addEventListener("keydown", async (e) => {
                 if (e.key == "Enter") {
                     let postId = e.target.getAttribute("postId");
                     let comment = e.target.value;
-                    if(comment == "") return;
-                    await Services.postJson(env.routes.post.sendComment + postId,{comment});
+                    this.commentLoading(true, postId);
+                    if (comment == "") return;
+                    await Services.postJson(env.routes.post.sendComment + postId, { comment });
                     this.updatePostCounters(postId);
                     this.updatePostComments(postId);
                     e.target.value = "";
                 }
             });
-        });
+        }
+        for (let i = 0; i < commentDeleteButtons.length; i++) {
+            commentDeleteButtons[i].addEventListener("click", async (e) => {
+
+                let buton = e.target.parentElement,
+                    myId = buton.getAttribute("myid"),
+                    comment = buton.getAttribute("comment"),
+                    postId = buton.parentElement.parentElement.getAttribute("postcommentsbyid");
+                this.commentLoading(true, postId);
+                await Services.postJson(env.routes.post.deleteComment + postId, { commentData: { myId, comment } });
+                this.updatePostComments(postId);
+                this.updatePostCounters(postId);
+            });
+        }
     }
-    static async updatePostComments(postId){
-       
-       let thisPost = (await Services.getPostData(postId))[0];
-       let thisComments = document.querySelector(`div[postcommentsbyid="${postId}"]`);
-       thisComments.innerHTML = await this.commentRender(thisPost.yorumlar);
-       
-       
+    static async updatePostComments(postId) {
+        let thisPost = (await Services.getPostData(postId))[0];
+        let thisComments = document.querySelector(`div[postcommentsbyid="${postId}"]`);
+        thisComments.innerHTML = await this.commentRender(thisPost.yorumlar);
+        await this.setHomeEvents();
+        this.commentLoading(false, postId);
+    }
+    static commentLoading(status, postId) {
+        let commentLoadingBoxes = document.querySelector(`.commentLoading,div[postId="${postId}"]`);
+        if (status) {
+            commentLoadingBoxes.style.display = "block";
+            return;
+        }
+        commentLoadingBoxes.style.display = "none";
     }
     static async updatePostCounters(postId) {
         await Services.postJson(env.routes.post.like + postId);
@@ -58,16 +92,35 @@ export default class Dom {
     static async postRender(postData) {
         let postsPlace = document.getElementById("postsPlace");
         postData.resim = Adapters.postImageAdapter(postData.resim);
+        console.log(postData);
+
         let user = new User();
         let username = (await User.getUserNameById(postData.paylasanId)).username;
+        let duygu = (function () {
+            switch (postData.duygu) {
+                case ("0"): return "Mutlu 😊";
+                case ("1"): return "Mutsuz ☹";
 
+                case ("2"): return "Endişeli😟";
+                case ("3"): return "Çılgın 🤪";
+
+                case ("4"): return "Hasta 🤢";
+
+                case ("5"): return "Gülmekten Kırılmış 🤣";
+
+                case ("6"): return "Sinirli 😡";
+
+                case ("7"): return "Keyfi Yerinde 🤗";
+            } 
+        })();
+        console.log(duygu);
         await user.init(username);
         let header = `<div class="card card-widget offset-md-2 col-md-8">
         <div class="card-header">
             <div class="user-block">
                 <img class="img-circle" src="${env.host + user.data.profilResmi}" alt="User Image">
                 <span class="username"><a href="#">${user.data.adSoyad}</a></span>
-                <span class="description" >${ (function () { if (postData.gizlilik == 1) return "Arkadaşlar"; else return "Herkese Açık"; })()} - ${postData.tarih}</span>
+                <span class="description" >${ (function () { if (postData.gizlilik == 1) return "Arkadaşlar"; else return "Herkese Açık"; })()} - ${postData.tarih}  | ${(function(){ if(duygu == undefined) return ""; else return `<span class="badge badge-primary" style="font-size:0.8rem"> ${duygu} <span>` })()} </span>
             </div>
             <!-- /.user-block -->
             <div class="card-tools">
@@ -86,8 +139,17 @@ export default class Dom {
         </div>
         <!-- /.card-footer -->
         <div class="card-footer" style="display: block;">
+        <div id="loading" class="col-12 text-center">
+              <div class="mb-2" style="display:none" postId="${postData.id}" class="commentLoading">  
+                    <div class="spinner-border" style="width: 1rem; height: 1rem;" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <strong>Yükleniyor...</strong>  
+                    </div>
+                </div>
                 <img class="img-fluid img-circle img-sm" src="${env.host + user.data.profilResmi}" alt="Alt Text">
                 <!-- .img-push is used to add margin to elements next to floating images -->
+                       
                 <div class="img-push">
                     <input type="text" postId = ${postData.id} class="form-control form-control-sm comment-form" placeholder="Yorum bırak...">
                 </div>
@@ -155,7 +217,9 @@ export default class Dom {
                 commentsResult += `  <div class="card-comment">
                 <!-- User image -->
                 <img class="img-circle img-sm" src="${env.host + user.data.profilResmi}" alt="User Image">
-
+                <button type="button" myId="${commentData[i].myId}" comment="${commentData[i].comment}" ${(function () { if (user.username != localStorage.getItem("username")) return 'style="display:none"'; else return ""; })()} class="close commentDelete" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
                 <div class="comment-text">
                     <span class="username">
                         ${user.data.adSoyad}
@@ -164,6 +228,7 @@ export default class Dom {
                     ${commentData[i].comment}
                 </div>
                 <!-- /.comment-text -->
+               
             </div> `;
             }
             resolve();

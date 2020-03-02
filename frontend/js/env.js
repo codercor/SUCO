@@ -11,7 +11,8 @@ export default {
             post:'/post/',
             home:"/post/home/",
             like:"/post/like/",
-            sendComment:"/post/sendComment/"
+            sendComment:"/post/sendComment/",
+            deleteComment:"/post/deleteComment/"
         }
     }
  }

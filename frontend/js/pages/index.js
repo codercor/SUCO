@@ -8,6 +8,7 @@ export default async () => {
     let userData = await User.getUserData(myUsername);
     console.log(userData);
     Dom.standartRender(userData);
+    Dom.loading(true);
     let homePosts = await User.getHomePosts(token);
 
     await new Promise(async (resolve, reject) => {
@@ -18,5 +19,6 @@ export default async () => {
     });
 
     Dom.setHomeEvents();
-
+    Dom.loading(false);
+    
 }
