@@ -29,7 +29,7 @@ export default class Dom {
         let commentForms = Array.from(document.getElementsByClassName("comment-form"));
         let likeButtons = Array.from(document.getElementsByClassName("like-button"));
         let commentDeleteButtons = Array.from(document.getElementsByClassName("commentDelete"));
-
+        let shareButtons = Array.from(document.getElementsByClassName("share-button"));
 
         for (let i = 0; i < likeButtons.length; i++) {
             likeButtons[i].addEventListener("click", async (e) => {
@@ -65,7 +65,34 @@ export default class Dom {
                 this.updatePostCounters(postId);
             });
         }
+        for (let i = 0; i < shareButtons.length; i++) {
+            shareButtons[i].addEventListener("click", (e) => {
+                let postId = e.target.getAttribute("postid");
+                this.shareModalInit(postId);
+            });
+        }
+
     }
+    static shareModalInit(postId) {
+        let facebokButton = document.getElementById("fb-sh"),
+            twitterButton = document.getElementById("tw-sh"),
+            whatsappButton = document.getElementById("wa-sh"),
+            copyButton = document.getElementById("cp-sh");
+        facebokButton.href = `https://www.facebook.com/sharer/sharer.php?u=${"/post/" + postId}`;
+        twitterButton.href = `https://twitter.com/intent/tweet?original_referer=${"/post/" + postId}&ref_src=twsrc%5Etfw&url=${"/post/" + postId}`;
+        whatsappButton.href = `whatsapp://send?text=${"/post/" + postId}`;
+        copyButton.setAttribute("url",`${"/post/" + postId}`);
+        copyButton.addEventListener("click",()=>{
+            let alan = copyButton.getAttribute("url");
+            let textAlani = document.createElement('TEXTAREA');
+            textAlani.value = alan;
+            document.body.appendChild(textAlani);
+            textAlani.select();
+            document.execCommand('copy');
+            textAlani.style.display = 'none';
+        });
+    }
+    
     static async updatePostComments(postId) {
         let thisPost = (await Services.getPostData(postId))[0];
         let thisComments = document.querySelector(`div[postcommentsbyid="${postId}"]`);
@@ -111,7 +138,7 @@ export default class Dom {
                 case ("6"): return "Sinirli 😡";
 
                 case ("7"): return "Keyfi Yerinde 🤗";
-            } 
+            }
         })();
         console.log(duygu);
         await user.init(username);
@@ -120,7 +147,7 @@ export default class Dom {
             <div class="user-block">
                 <img class="img-circle" src="${env.host + user.data.profilResmi}" alt="User Image">
                 <span class="username"><a href="#">${user.data.adSoyad}</a></span>
-                <span class="description" >${ (function () { if (postData.gizlilik == 1) return "Arkadaşlar"; else return "Herkese Açık"; })()} - ${postData.tarih}  | ${(function(){ if(duygu == undefined) return ""; else return `<span class="badge badge-primary" style="font-size:0.8rem"> ${duygu} <span>` })()} </span>
+                <span class="description" >${ (function () { if (postData.gizlilik == 1) return "Arkadaşlar"; else return "Herkese Açık"; })()} - ${postData.tarih}  | ${(function () { if (duygu == undefined) return ""; else return `<span class="badge badge-primary" style="font-size:0.8rem"> ${duygu} <span>` })()} </span>
             </div>
             <!-- /.user-block -->
             <div class="card-tools">
@@ -159,7 +186,7 @@ export default class Dom {
             let noImagePostTemp = `
     <div class="card-body" style="display: block;">
         <p>${postData.metin}</p>
-        <button type="button" postId="${postData.id}" class="btn btn-default btn-sm"><i class="fas fa-share"></i>Paylaş</button>
+        <button type="button" postId="${postData.id}" data-toggle="modal" data-target="#share-modal" class="btn btn-default btn-sm share-button"><i class="fas fa-share"></i>Paylaş</button>
         <button type="button" postId="${postData.id}" class="btn btn-default btn-sm like-button"><i class="fas fa-heart"></i>Suco</button>
         <span class="float-right text-muted" counterForById="${postData.id}">${eval(postData.begenenler).length} Suco - ${eval(postData.yorumlar).length} Yorum</span>
     </div>
@@ -173,7 +200,7 @@ export default class Dom {
             <img class="img-fluid pad" src="${ env.host + '/postImages/' + postData.resim[0]}" alt="Photo">
 
             <p>${postData.metin}</p>
-            <button type="button" postId="${postData.id}" class="btn btn-default btn-sm"><i class="fas fa-share"></i>
+            <button type="button" postId="${postData.id}" data-toggle="modal" data-target="#share-modal" class="btn btn-default btn-sm share-button"><i class="fas fa-share"></i>
                 Paylaş</button>
             <button type="button" postId="${postData.id}" class="btn btn-default btn-sm like-button"><i class="fas fa-heart"></i>
                 Suco</button>
@@ -193,7 +220,7 @@ export default class Dom {
                         </div>
     
                 <p>${postData.metin}</p>
-                <button type="button" postId="${postData.id}" class="btn btn-default btn-sm"><i class="fas fa-share"></i>Paylaş</button>
+                <button type="button" postId="${postData.id}" data-toggle="modal" data-target="#share-modal" class="btn btn-default btn-sm share-button"><i class="fas fa-share"></i>Paylaş</button>
                 <button type="button" postId="${postData.id}" class="btn btn-default btn-sm like-button"><i class="fas fa-heart"></i>Suco</button>
 
                 <span class="float-right text-muted" counterForById="${postData.id}">${eval(postData.begenenler).length} Suco - ${eval(postData.yorumlar).length} Yorum</span>
