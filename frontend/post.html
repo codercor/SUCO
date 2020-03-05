@@ -31,7 +31,8 @@ to get the desired effect
 <body class="hold-transition layout-boxed sidebar-mini">
     <div class="wrapper">
         <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+         <!-- Navbar -->
+         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -59,7 +60,8 @@ to get the desired effect
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="dropdown" href="#">
-                        <img src="dist/img/user2-160x160.jpg" class="img-circle" style="height: 30px;" alt="User Image">
+                        <img src="dist/img/user2-160x160.jpg" class="img-circle my-photo" style="height: 30px;"
+                            alt="User Image">
                     </a>
                 </li>
                 <!-- Notifications Dropdown Menu -->
@@ -121,10 +123,10 @@ to get the desired effect
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                        <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2 my-photo" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Selami Şahin</a>
+                        <a href="#" class="d-block my-user-name">Selami Şahin</a>
                     </div>
                 </div>
 
@@ -161,7 +163,7 @@ to get the desired effect
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="profil.html" class="nav-link">
+                            <a href="profile.html" class="nav-link">
                                 <i class="nav-icon fas fa-cog"></i>
                                 <p>
                                     Profil
@@ -176,6 +178,7 @@ to get the desired effect
             <!-- /.sidebar -->
         </aside>
 
+
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
@@ -185,83 +188,8 @@ to get the desired effect
             <!-- Main content -->
             <div class="content ">
                 <div class=" container-fluid">
-                    <div class="row ">
-                        <div class="card mt-5 card-widget offset-md-2 col-md-8">
-                            <div class="card-header">
-                                <div class="user-block">
-                                    <img class="img-circle" src="dist/img/user1-128x128.jpg" alt="User Image">
-                                    <span class="username"><a href="#">Mustafa Çor</a></span>
-                                    <span class="description">Herkese Açık - Bugün</span>
-                                </div>
-                                <!-- /.user-block -->
-                                <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-toggle="tooltip"
-                                        title="Mark as read">
-                                        <i class="far fa-circle"></i></button>
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
-                                            class="fas fa-minus"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-tool" data-card-widget="remove"><i
-                                            class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                                <!-- /.card-tools -->
-                            </div>
-                            <!-- /.card-header -->
-                            <div class="card-body" style="display: block;">
-
-                                <p>Yeni masa aldım güzel mi arkadaşlar ?</p>
-                                <button type="button" class="btn btn-default btn-sm"><i class="fas fa-share"></i>
-                                    Paylaş</button>
-                                <button type="button" class="btn btn-default btn-sm"><i class="fas fa-heart"></i>
-                                    Suco</button>
-                                <span class="float-right text-muted">127 Suco - 3 Yorum</span>
-                            </div>
-                            <!-- /.card-body -->
-                            <div class="card-footer card-comments" style="display: block;">
-                                <div class="card-comment">
-                                    <!-- User image -->
-                                    <img class="img-circle img-sm" src="dist/img/user3-128x128.jpg" alt="User Image">
-
-                                    <div class="comment-text">
-                                        <span class="username">
-                                            Sezen Aksu
-                                            <span class="text-muted float-right">Bugün</span>
-                                        </span><!-- /.username -->
-                                        Tam üzerinde şarkı yazmalık masa Mustafa'cığım bana 50 liraya bırak. :)
-                                    </div>
-                                    <!-- /.comment-text -->
-                                </div>
-                                <!-- /.card-comment -->
-                                <div class="card-comment">
-                                    <!-- User image -->
-                                    <img class="img-circle img-sm" src="dist/img/user4-128x128.jpg" alt="User Image">
-
-                                    <div class="comment-text">
-                                        <span class="username">
-                                            Ayşe Abla
-                                            <span class="text-muted float-right">Bu sabah</span>
-                                        </span><!-- /.username -->
-                                        Hiç beğenmedim benim masam daha güzel.
-                                    </div>
-                                    <!-- /.comment-text -->
-                                </div>
-                                <!-- /.card-comment -->
-                            </div>
-                            <!-- /.card-footer -->
-                            <div class="card-footer" style="display: block;">
-                                <form action="#" method="post">
-                                    <img class="img-fluid img-circle img-sm" src="dist/img/user4-128x128.jpg"
-                                        alt="Alt Text">
-                                    <!-- .img-push is used to add margin to elements next to floating images -->
-                                    <div class="img-push">
-                                        <input type="text" class="form-control form-control-sm"
-                                            placeholder="Yorum bırak...">
-                                    </div>
-                                </form>
-                            </div>
-                            <!-- /.card-footer -->
-                        </div>
+                    <div id="postsPlace" class="row">
+                       
                     </div>
                     <!-- /.row -->
 
@@ -482,6 +410,37 @@ to get the desired effect
             </div>
         </div>
     </div>
+    <div class="modal fade" id="share-modal" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-secondary">
+                <div class="modal-header">
+                    <h4 class="modal-title">Bu Gönderiyi Paylaş</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body bg-light text-center">
+                    <a id="fb-sh" href="" target="_blank">
+                        <i style="font-size: 3rem" class="fab fa-facebook m-1"></i>
+                    </a>
+                    <a id="tw-sh"
+                        href="">
+                        <i style="font-size: 3rem" class="fab fa-twitter m-1"></i>
+                    </a>
+                    <a id="wa-sh" href="">
+                        <i style="font-size: 3rem" class="fab fa-whatsapp-square m-1"></i>
+                    </a>
+                    <span id="cp-sh"  url="">
+                        <i style="font-size: 3rem" class="fas fa-copy m-1"></i>
+                    </span>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Kapat</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
     <!-- /chat friends -->
     <!-- REQUIRED SCRIPTS -->
 
@@ -491,6 +450,7 @@ to get the desired effect
     <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE -->
     <script src="dist/js/adminlte.js"></script>
+    <script type="module" src="app.js"></script>
 
     <!-- OPTIONAL SCRIPTS -->
 

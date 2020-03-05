@@ -33,8 +33,6 @@ async function getPeopleWhoLike(postId) {
             else resolve(result);
         });
     }));
-    console.log(peopleWhoLike);
-    
     return peopleWhoLike[0].begenenler;
 }
 

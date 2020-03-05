@@ -78,10 +78,10 @@ export default class Dom {
             twitterButton = document.getElementById("tw-sh"),
             whatsappButton = document.getElementById("wa-sh"),
             copyButton = document.getElementById("cp-sh");
-        facebokButton.href = `https://www.facebook.com/sharer/sharer.php?u=${"/post/" + postId}`;
-        twitterButton.href = `https://twitter.com/intent/tweet?original_referer=${"/post/" + postId}&ref_src=twsrc%5Etfw&url=${"/post/" + postId}`;
-        whatsappButton.href = `whatsapp://send?text=${"/post/" + postId}`;
-        copyButton.setAttribute("url",`${"/post/" + postId}`);
+        facebokButton.href = `https://www.facebook.com/sharer/sharer.php?u=${location.host}/frontend/post.html?postId=${postId}`;
+        twitterButton.href = `https://twitter.com/intent/tweet?original_referer=${location.host}/frontend/post.html?postId=${postId}&ref_src=twsrc%5Etfw&url=http://localhost:85/post.html?postId=${postId}`;
+        whatsappButton.href = `whatsapp://send?text=${location.host}/frontend/post.html?postId=${postId}`;
+        copyButton.setAttribute("url",`${location.host}/frontend/post.html?postId=${postId}`);
         copyButton.addEventListener("click",()=>{
             let alan = copyButton.getAttribute("url");
             let textAlani = document.createElement('TEXTAREA');
@@ -147,7 +147,7 @@ export default class Dom {
             <div class="user-block">
                 <img class="img-circle" src="${env.host + user.data.profilResmi}" alt="User Image">
                 <span class="username"><a href="#">${user.data.adSoyad}</a></span>
-                <span class="description" >${ (function () { if (postData.gizlilik == 1) return "Arkadaşlar"; else return "Herkese Açık"; })()} - ${postData.tarih}  | ${(function () { if (duygu == undefined) return ""; else return `<span class="badge badge-primary" style="font-size:0.8rem"> ${duygu} <span>` })()} </span>
+                <span class="description" ><a style="color:black" href="post.html?postId=${postData.id}"> ${  (function () { if (postData.gizlilik == 1) return "Arkadaşlar"; else return "Herkese Açık"; })()} - ${postData.tarih} </a> | ${(function () { if (duygu == undefined) return ""; else return `<span class="badge badge-primary" style="font-size:0.8rem"> ${duygu} <span>` })()} </span>
             </div>
             <!-- /.user-block -->
             <div class="card-tools">
