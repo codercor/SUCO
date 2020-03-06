@@ -8,10 +8,13 @@ export default class Dom {
         let myNamePlace = Array.from(document.getElementsByClassName("my-user-name"));
         let myPhotoPlace = Array.from(document.getElementsByClassName("my-photo"));
         myNamePlace.forEach(el => {
-            el.innerHTML = data.adSoyad;
+            el.innerHTML = `<a href="/frontend/profile.html?user=${data.kullaniciAdi}">`+ data.adSoyad + '</a>';
         });
         myPhotoPlace.forEach(el => {
-            el.src = env.host + data.profilResmi;
+            let parent = el.parentElement;
+            parent.innerHTML = "";
+            parent.innerHTML += `<a href="/frontend/profile.html?user=${data.kullaniciAdi}">  <img src="${env.host + data.profilResmi}" class="img-circle my-photo" style="height: 30px;"
+            alt="User Image">`+'</a>';
         });
     }
     static loading(status) {
@@ -119,8 +122,6 @@ export default class Dom {
     static async postRender(postData) {
         let postsPlace = document.getElementById("postsPlace");
         postData.resim = Adapters.postImageAdapter(postData.resim);
-        console.log(postData);
-
         let user = new User();
         let username = (await User.getUserNameById(postData.paylasanId)).username;
         let duygu = (function () {
@@ -140,13 +141,13 @@ export default class Dom {
                 case ("7"): return "Keyfi Yerinde 🤗";
             }
         })();
-        console.log(duygu);
         await user.init(username);
         let header = `<div class="card card-widget offset-md-2 col-md-8">
         <div class="card-header">
             <div class="user-block">
-                <img class="img-circle" src="${env.host + user.data.profilResmi}" alt="User Image">
-                <span class="username"><a href="#">${user.data.adSoyad}</a></span>
+            <a href="/frontend/profile.html?user=${username}">
+                <img class="img-circle" src="${env.host + user.data.profilResmi}" alt="User Image"> </a>
+                <span class="username"><a href="/frontend/profile.html?user=${username}">${user.data.adSoyad}</a></span>
                 <span class="description" ><a style="color:black" href="post.html?postId=${postData.id}"> ${  (function () { if (postData.gizlilik == 1) return "Arkadaşlar"; else return "Herkese Açık"; })()} - ${postData.tarih} </a> | ${(function () { if (duygu == undefined) return ""; else return `<span class="badge badge-primary" style="font-size:0.8rem"> ${duygu} <span>` })()} </span>
             </div>
             <!-- /.user-block -->
@@ -331,5 +332,68 @@ export default class Dom {
 
 
         return result;
+    }
+    static profileRender(userData){
+        let firstNamePlace = document.getElementById("firstName"),
+            lastNamePlace = document.getElementById("lastName"),
+            ppPlace = document.getElementById("pp"),
+            cpPlace = document.getElementById("cp"),
+            postCounterPlace = document.getElementById("postCounter"),
+            friendCounter = document.getElementById("friendCounter"),
+            personelInfo = document.getElementById("personelInfo");
+        let firstName = userData.adSoyad.split(" ")[0],
+            lastName = userData.adSoyad.split(" ")[1];
+
+            firstNamePlace.innerHTML = firstName;
+            lastNamePlace.innerHTML = lastName;
+            ppPlace.src =  env.host + userData.profilResmi;
+            cpPlace.style = `background: url('${(env.host + userData.kapakResmi)}');background-size: cover;`;
+            postCounterPlace.innerHTML = userData.posts.length;
+            friendCounter.innerHTML = (eval(userData.arkadaslar)).length;  
+            this.profileInfoRender(userData.kisiselBilgi);
+    }
+    static profileInfoRender(info){
+        info = JSON.parse(info);
+        let infoPlace = document.getElementById("personelInfo");
+        let birthdayIcon = `fas fa-birthday-cake`,
+            cityIcon = `fas fa-street-view`,
+            jobIcon = `fas fa-briefcase`;
+
+        let template = `
+        <li class="nav-item">
+          <a  class="nav-link">
+            <i class="fas fa-birthday-cake mr-2"></i> Doğum Tarihi <span class="float-right badge">31.05.1996</span>
+          </a>
+        </li>`
+        
+        
+        Object.keys(info).forEach((el)=>{
+            if(el == "memleket"){
+                infoPlace.innerHTML +=  `
+                <li class="nav-item">
+                  <a  class="nav-link">
+                    <i class="${cityIcon} mr-2"></i> Memleket <span class="float-right badge">${info.memleket.toUpperCase()} </span>
+                  </a>
+                </li>`
+            }
+            if(el == "meslek") {
+                infoPlace.innerHTML +=  `
+                <li class="nav-item">
+                  <a  class="nav-link">
+                    <i class="${jobIcon} mr-2"></i> Meslek <span class="float-right badge">${info.meslek.toUpperCase()} </span>
+                  </a>
+                </li>`
+            } ;
+            if(el == "dogum"){
+                infoPlace.innerHTML +=  `
+                <li class="nav-item">
+                  <a  class="nav-link">
+                    <i class="${birthdayIcon} mr-2"></i> Doğum Tarihi <span class="float-right badge">${info.dogum.toUpperCase()} </span>
+                  </a>
+                </li>`
+            } ;
+        });
+        
+        
     }
 }

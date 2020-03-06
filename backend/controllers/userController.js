@@ -133,7 +133,8 @@ router.post('/:username', auth, blockCheck, async (req, res) => {
         }
        
         }
-        res.json(data[0]);
+       if(data[0] != undefined) res.json(data[0]);
+       else res.json({error:"user not found"})
     });
 
 async function getUsernamesAndIdes(req) {

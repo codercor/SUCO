@@ -61,8 +61,8 @@ userModel.getIdbyUserName = (userName) => {
         let sql = `SELECT id FROM kullanicilar WHERE kullaniciAdi = "${userName}"`;
         con.query(
             sql, (err, result) => {
-                if (err) reject(err)
-                resolve(result[0].id);
+                if (err) reject(err);
+                else if(result[0] != undefined)resolve(result[0].id);
             });
     });
 }
