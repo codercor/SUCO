@@ -5,7 +5,13 @@ export default {
             user:"/user/",
             login:`/user/login`,
             register:`/user/register`,
-            getIdByUsername: `/user/getIdByUsername`
+            getIdByUsername: `/user/getIdByUsername`,
+            acceptFriendRequest: `/user/acceptFriendRequest/`,
+            rejectFriendRequest: `/user/rejectFriendRequest/`,
+            cancelFriendRequest:`/user/cancelFriendRequest/`,
+            addFriend:`/user/addFriend/`,
+            block:`/user/block/`,
+            deleteFriend:`/user/deleteFriend/`,
         },
         post:{
             post:'/post/',
