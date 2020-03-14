@@ -4,7 +4,7 @@ import User from './User.js';
 import { Services } from './Services.js';
 
 export default class Dom {
-    static standartRender(data) {
+    static async standartRender(data) {
         let myNamePlace = Array.from(document.getElementsByClassName("my-user-name"));
         let myPhotoPlace = Array.from(document.getElementsByClassName("my-photo"));
         myNamePlace.forEach(el => {
@@ -16,6 +16,7 @@ export default class Dom {
             parent.innerHTML += `<a href="/frontend/profile.html?user=${data.kullaniciAdi}">  <img src="${env.host + data.profilResmi}" class="img-circle my-photo" style="height: 30px;"
             alt="User Image">`+ '</a>';
         });
+        await this.initFriendRequestsButton(data);
     }
     static loading(status) {
         let postsPlace = document.getElementById("postsPlace");
@@ -341,9 +342,9 @@ export default class Dom {
             postCounterPlace = document.getElementById("postCounter"),
             friendCounter = document.getElementById("friendCounter");
 
-            [firstNamePlace,lastNamePlace,postCounterPlace,friendCounter].forEach((el)=>{
-                el.innerHTML = "";
-            });
+        [firstNamePlace, lastNamePlace, postCounterPlace, friendCounter].forEach((el) => {
+            el.innerHTML = "";
+        });
 
         let firstName = userData.adSoyad.split(" ")[0],
             lastName = userData.adSoyad.split(" ")[1];
@@ -375,9 +376,15 @@ export default class Dom {
             let blockButton = document.getElementById("blockButton");
             deleteFriendButton.addEventListener("click", async () => {
                 let status = await Services.postJson(env.routes.user.deleteFriend + data.kullaniciAdi);
+                this.showToast("Arkadaşlıktan çıkartıldı.", "success");
+                this.profileRender((await User.getUserData(data.kullaniciAdi)));
             });
             blockButton.addEventListener("click", async () => {
                 let status = await Services.postJson(env.routes.user.block + data.kullaniciAdi);
+                this.showToast("Kişi Engellendi !", "warning");
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
             });
         } else
             // Bu kişi bana istek göndermiş mi ?
@@ -389,10 +396,13 @@ export default class Dom {
                 let rejectButton = document.getElementById("rejectButton");
                 acceptButton.addEventListener("click", async () => {
                     let status = await Services.postJson(env.routes.user.acceptFriendRequest + data.kullaniciAdi);
-                    // Yapılacaklar....
+                    this.showToast("Artık Arkadaşsınız", "success");
+                    this.profileRender((await User.getUserData(data.kullaniciAdi)));
                 });
                 rejectButton.addEventListener("click", async () => {
                     let status = await Services.postJson(env.routes.user.rejectFriendRequest + data.kullaniciAdi);
+                    this.showToast("Arkadaşlık isteği reddedildi.", "warning");
+                    this.profileRender((await User.getUserData(data.kullaniciAdi)));
                 });
             } else
                 // Ben bu kişiye istek göndermiş miyim ?
@@ -402,14 +412,12 @@ export default class Dom {
                     let cancelRequestButton = document.getElementById("cancelRequestButton");
                     cancelRequestButton.addEventListener("click", async () => {
                         let status = await Services.postJson(env.routes.user.cancelFriendRequest + data.kullaniciAdi);
+                        this.showToast("İstekten Vazgeçildi.", "success");
+                        this.profileRender((await User.getUserData(data.kullaniciAdi)));
                     });
                 } else if (data.id == myId) {
                     console.log("Kendi Profilin");
                     friendButtonPlace.innerHTML = `<button type="button" id="friendsButton" class="btn btn-block btn-outline-primary" data-toggle="modal" data-target="#friendsModal">Arkadaşlar</button>`;
-                    let friendsButton = document.getElementById("friendsButton");
-                    friendsButton.addEventListener("click", () => {
-                        // Arkadaşları listele
-                    });
                     this.friendsRender(data.kullaniciAdi);
                 }
                 else
@@ -422,11 +430,96 @@ export default class Dom {
                         let blockButton = document.getElementById("blockButton");
                         sendFriendRequestButton.addEventListener("click", async () => {
                             let status = await Services.postJson(env.routes.user.addFriend + data.kullaniciAdi);
+                            this.showToast("Arkadaşlık isteği gönderildi.", "success");
+                            this.profileRender((await User.getUserData(data.kullaniciAdi)));
                         });
                         blockButton.addEventListener("click", async () => {
                             let status = await Services.postJson(env.routes.user.block + data.kullaniciAdi);
+                            this.showToast("Kişi Engellendi !", "warning");
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 2000);
                         });
                     }
+    }
+    static async initFriendRequestsButton(data) {
+        let friendRequestsButton = document.getElementById("friendRequestsButton");
+        friendRequestsButton.innerHTML = "";
+        let myUsername = data.kullaniciAdi;
+        data = JSON.parse(data.istekler);
+
+        let requestCounter = data.length;
+        data = JSON.parse(data.gelen);
+ 
+       
+        
+        let requestsHTML = "";
+        for (let i = 0; i < data.length; i++) {
+            let username = (await User.getUserNameById(data[i])).username;
+            let userData = await User.getUserData(username);
+            requestsHTML += `<div class="my-2 mx-1" >
+            <a href="/frontend/profile.html?user=${username}" class="dropdown-item d-inline"> <img src="${env.host + '/' + userData.profilResmi}"
+                    style="width: 30px; height: 30px;" class="img-circle elevation-2" alt="User Image">
+                <span class="d-inline ml-1"> ${userData.adSoyad} </span></a>
+                <div class="d-inline ml-1">
+                    <button class="btn btn-xs btn-success navbarFriendRequestAcceptButton" username="${username}">Onayla</button>
+                    <button class="btn btn-xs btn-danger navbarFriendRequestRejectButton" username="${username}"> Reddet</button>
+                </div>
+            
+        </div>`
+        }
+        let template= `` 
+        if(data.length == 0){
+            template = `<a class="nav-link" data-toggle="dropdown" href="#">
+            <i class="fas fa-user-friends"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right pb-3">
+                <span class="dropdown-item dropdown-header">Arkadaşlık isteği yok.</span>
+                <div class="dropdown-divider"></div>
+            </div>`;
+        }else{
+           template = `<a class="nav-link" data-toggle="dropdown" href="#">
+            <i class="fas fa-user-friends"></i>
+            <span class="badge badge-primary navbar-badge">${data.length}</span>
+    
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right pb-3">
+                <span class="dropdown-item dropdown-header">${data.length} Yeni Arkadaşlık İsteği</span>
+                <div class="dropdown-divider"></div>
+                ${requestsHTML}   
+            </div>`;  
+        }
+        friendRequestsButton.innerHTML += template;
+        let acceptButtons = document.getElementsByClassName("navbarFriendRequestAcceptButton");
+        let rejectButtons = document.getElementsByClassName("navbarFriendRequestRejectButton");
+        for (let i = 0; i < acceptButtons.length; i++) {
+            acceptButtons[i].addEventListener("click", async (e)=>{
+                let status = await Services.postJson(env.routes.user.acceptFriendRequest + e.target.getAttribute("username"));
+                this.showToast("Artık Arkadaşsınız", "success");
+                await this.initFriendRequestsButton( await User.getUserData(myUsername));
+            });
+        }
+    }
+    static showToast(body, bgcolor) { // showToast("arkadaş olarak eklendi","bg-success");
+        let myToast = document.getElementsByClassName("myToast")[0];
+        myToast.style.display = "block";
+        let icon,
+            ToastBody = document.getElementById("toast-body");
+
+        if (bgcolor == "success") icon = "check";
+        if (bgcolor == "warning") icon = "exclamation-triangle";
+        if (bgcolor == "danger") icon = "ban";
+
+        let content = `   <div class="alert alert-${bgcolor} alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h5><i class="icon fas fa-${icon}"></i> Tamam !</h5>
+        ${body}
+       </div>`;
+        ToastBody.innerHTML = content;
+        setTimeout(() => {
+            myToast.style.display = "none";
+            ToastBody.innerHTML = "";
+        }, 3000)
     }
     static profileInfoRender(info) {
         info = JSON.parse(info);
@@ -435,7 +528,7 @@ export default class Dom {
             cityIcon = `fas fa-street-view`,
             jobIcon = `fas fa-briefcase`;
 
-            infoPlace.innerHTML = "";
+        infoPlace.innerHTML = "";
         Object.keys(info).forEach((el) => {
             if (el == "memleket") {
                 infoPlace.innerHTML += `
@@ -466,11 +559,7 @@ export default class Dom {
 
     }
     static async friendsRender(username) {
-        console.log(username);
-        
-        let friendsIds =  eval(((await User.getUserData(username)).arkadaslar));
-        console.log(friendsIds);
-        
+        let friendsIds = eval(((await User.getUserData(username)).arkadaslar));
         let friendsListPlace = document.getElementById("friendsListPlace"),
             friendsUserNames = [],
             friends = [];
@@ -482,7 +571,7 @@ export default class Dom {
         }
         friendsListPlace.innerHTML = "";
         for (let i = 0; i < friends.length; i++) {
-               friendsListPlace.innerHTML +=`<li class="list-group-item row">
+            friendsListPlace.innerHTML += `<li class="list-group-item row">
                <div class="row">
                    <div class="col-2 ">
                       <a href="/frontend/profile.html?user=${friendsUserNames[i]}"> <img src="${env.host + '/' + friends[i].profilResmi}" class="img-circle" style="height: 30px;"
@@ -499,7 +588,7 @@ export default class Dom {
         }
         let friendsDeleteButtons = document.getElementsByClassName("friendsDeleteButtons");
         for (let i = 0; i < friendsDeleteButtons.length; i++) {
-            friendsDeleteButtons[i].addEventListener("click", async(e)=>{
+            friendsDeleteButtons[i].addEventListener("click", async (e) => {
                 let status = await Services.postJson(env.routes.user.deleteFriend + e.target.getAttribute("username"));
                 this.profileRender((await User.getUserData(username)))
                 this.friendsRender(username);
