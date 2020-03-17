@@ -77,6 +77,146 @@ export default class Dom {
         }
 
     }
+
+    static async settingsInit(user) {
+        let settingsForm = document.getElementById("settingsForm");
+        let template = `<div class="row">
+        <div class="col-6"> 
+            <div class="row">
+                <div class="col-8">
+                    <img src="${env.host + user.profilResmi}" id="ppPreview" style="height: 200px; width: 200px;">
+                </div>
+                <div class="col-4 py-5">
+                    <button class="btn btn-outline-primary m-1" id="ppSelect" >Değiştir</button>
+                    <input id="ppInput" style="display:none" type="file">
+                    <button class="btn btn-outline-success m-1" id="ppConfirm">Onayla</button>
+                </div>
+            </div>
+            
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <div class="col-8">
+                    <img src="${env.host + user.kapakResmi}" id="cpPreview" style="height: 200px; width: 200px;">
+                </div>
+                <div class="col-4 py-5">
+                    <button class="btn btn-outline-primary m-1" id="cpSelect">Değiştir</button>
+                    <input id="cpInput" style="display:none" type="file">
+                    <button class="btn btn-outline-success m-1" id="cpConfirm">Onayla</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dropdown-divider"></div>
+    <div class="row mt-3">
+        <div class="col-3">
+            <input type="password" placeholder="Eski Şifre" class="form-control is-invalid">
+        </div>
+        <div class="col-3">
+            <input type="password" placeholder="Yeni Şifre" class="form-control is-valid">
+        </div>
+        <div class="col-3">
+            <input type="password" placeholder="Yeni Şifre Tekrar" class="form-control is-valid">
+        </div>
+        <div class="col-3">
+            <button type="button" class="btn btn-block btn-outline-info btn-md">Kaydet</button>
+        </div>
+    </div>
+    <div class="dropdown-divider my-4"></div>
+    <div class="row">
+        <div class="col-5">
+            <input type="text"  value="${user.adSoyad}" class="form-control">
+        </div>
+        <div class="col-5">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">@</span>
+                </div>
+                <input type="text" class="form-control is-invalid" value="${user.kullaniciAdi}">
+              </div>
+        </div>
+        <div class="col-2">
+            <button type="button" class="btn btn-block btn-outline-secondary btn-md">Kaydet</button>
+        </div>
+    </div>
+    <div class="dropdown-divider my-4"></div>
+    <div class="row">
+        <div class="col-3">
+            <input type="text" class="form-control" placeholder="Memleket...">  
+        </div>
+        <div class="col-3">
+            <input type="text" class="form-control" placeholder="Meslek...">  
+        </div>
+        <div class="col-3">
+            <input type="text" class="form-control" placeholder="Doğum Tarihi...">  
+        </div>
+        <div class="col-3">
+            <button type="button" class="btn btn-block btn-outline-dark btn-md">Kaydet</button>
+        </div>
+    </div>`;
+        settingsForm.innerHTML += template;
+
+        let ppSelect = document.getElementById("ppSelect"),
+            ppConfirm = document.getElementById("ppConfirm"),
+            ppInput = document.getElementById("ppInput"),
+
+            cpSelect = document.getElementById("cpSelect"),
+            cpConfirm = document.getElementById("cpConfirm"),
+            cpInput = document.getElementById("cpInput"),
+
+            formData = new FormData();
+
+            formData.set("token",localStorage.getItem("token"));
+
+        ppSelect.addEventListener("click", () => {
+            ppInput.click();
+        });
+        cpSelect.addEventListener("click", () => {
+            cpInput.click();
+        });
+
+      
+        ppInput.addEventListener("change", (e) => {
+            let image = e.target.files[0];
+            if (image.type == "image/png" || image.type == "image/jpeg" || image.type == "image/jpg") {
+                this.previewImage(image, "ppPreview");
+                formData.append("pp",image);
+            }
+            else e.target.value = "";
+
+            console.log(e.target.files);
+            console.log(formData.getAll("token"));
+
+        });
+
+        cpInput.addEventListener("change", (e) => {
+            let image = e.target.files[0];
+            if (image.type == "image/png" || image.type == "image/jpeg" || image.type == "image/jpg") {
+                this.previewImage(image, "cpPreview");
+                formData.append("cp",image);
+            }
+            else e.target.value = "";
+        });
+       
+        //Onaylama
+        ppConfirm.addEventListener("click",async () => { 
+            let update = await fetch((env.host + env.routes.user.updatePP), {
+                method: 'POST',
+                body: formData
+              });
+            console.log(update);
+        });
+        cpConfirm.addEventListener("click", () => { });
+
+    }
+    static previewImage(file, imgId) {
+        let reader = new FileReader();
+        reader.onload = function () {
+            let output = document.getElementById(imgId);
+            output.src = reader.result;
+        }
+        reader.readAsDataURL(file);
+    }
     static shareModalInit(postId) {
         let facebokButton = document.getElementById("fb-sh"),
             twitterButton = document.getElementById("tw-sh"),
@@ -250,10 +390,10 @@ export default class Dom {
                 <span aria-hidden="true">&times;</span>
               </button>
                 <div class="comment-text">
-                    <span class="username">
+                <a href="/frontend/profile.html?user=${user.data.kullaniciAdi}"><span class="username">
                         ${user.data.adSoyad}
                         <span class="text-muted float-right"></span>
-                    </span><!-- /.username -->
+                    </span></a><!-- /.username -->
                     ${commentData[i].comment}
                 </div>
                 <!-- /.comment-text -->
@@ -450,9 +590,9 @@ export default class Dom {
 
         let requestCounter = data.length;
         data = JSON.parse(data.gelen);
- 
-       
-        
+
+
+
         let requestsHTML = "";
         for (let i = 0; i < data.length; i++) {
             let username = (await User.getUserNameById(data[i])).username;
@@ -468,8 +608,8 @@ export default class Dom {
             
         </div>`
         }
-        let template= `` 
-        if(data.length == 0){
+        let template = ``
+        if (data.length == 0) {
             template = `<a class="nav-link" data-toggle="dropdown" href="#">
             <i class="fas fa-user-friends"></i>
             </a>
@@ -477,8 +617,8 @@ export default class Dom {
                 <span class="dropdown-item dropdown-header">Arkadaşlık isteği yok.</span>
                 <div class="dropdown-divider"></div>
             </div>`;
-        }else{
-           template = `<a class="nav-link" data-toggle="dropdown" href="#">
+        } else {
+            template = `<a class="nav-link" data-toggle="dropdown" href="#">
             <i class="fas fa-user-friends"></i>
             <span class="badge badge-primary navbar-badge">${data.length}</span>
     
@@ -487,16 +627,16 @@ export default class Dom {
                 <span class="dropdown-item dropdown-header">${data.length} Yeni Arkadaşlık İsteği</span>
                 <div class="dropdown-divider"></div>
                 ${requestsHTML}   
-            </div>`;  
+            </div>`;
         }
         friendRequestsButton.innerHTML += template;
         let acceptButtons = document.getElementsByClassName("navbarFriendRequestAcceptButton");
         let rejectButtons = document.getElementsByClassName("navbarFriendRequestRejectButton");
         for (let i = 0; i < acceptButtons.length; i++) {
-            acceptButtons[i].addEventListener("click", async (e)=>{
+            acceptButtons[i].addEventListener("click", async (e) => {
                 let status = await Services.postJson(env.routes.user.acceptFriendRequest + e.target.getAttribute("username"));
                 this.showToast("Artık Arkadaşsınız", "success");
-                await this.initFriendRequestsButton( await User.getUserData(myUsername));
+                await this.initFriendRequestsButton(await User.getUserData(myUsername));
             });
         }
     }
