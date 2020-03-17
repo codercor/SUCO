@@ -5,18 +5,11 @@ class User {
         userData = {
             kullaniciAdi: userData.username,
             adSoyad: userData.name,
-            kisiselBilgi: "",
             sifre: userData.password,
-            profilResmi: "",
-            kapakResmi: "",
             eposta: userData.email,
-            ayarlar: ""
         }
-
-        userData = JSON.stringify(userData);
         let response = await Services.postJson(env.routes.user.register, userData);
         response = await response.json();
-        userData = JSON.parse(userData);
         if (response.register) {
             let loginData = await this.login(userData.kullaniciAdi, userData.sifre);
             if (loginData.logged) {

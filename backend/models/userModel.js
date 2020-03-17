@@ -3,10 +3,12 @@ let userModel = {};
 
 
 userModel.register = async (user) => {
+    console.log("test");
+
     let checkMail = await userModel.checkMail(user.eposta),
         checkUsername = await userModel.checkUsername(user.kullaniciAdi);
     // Kayıtlı mı diye kontrol et 
-    if (checkMail.length > 0 || checkUsername.length > 0 ) {
+    if (checkMail.length > 0 || checkUsername.length > 0) {
         return new Promise((resolve, reject) => {
             // Kayıtlı ise gerekli cevabı ver
             resolve({ register: false, err: "registered" })
@@ -14,9 +16,9 @@ userModel.register = async (user) => {
     }
     // Kayıtlı değil ise kaydet
     return new Promise((resolve, reject) => {
-        let sql = `INSERT INTO kullanicilar(kullaniciAdi,adSoyad,kisiselBilgi,sifre,profilResmi,kapakResmi,eposta,ayarlar) VALUES (?,?,?,?,?,?,?,?)`;
+        let sql = `INSERT INTO kullanicilar(kullaniciAdi,adSoyad,sifre,eposta) VALUES ('${user.kullaniciAdi}','${user.adSoyad}','${user.sifre}','${user.eposta}')`;
         con.query(
-            sql, Object.values(user), (err, result) => {
+            sql, (err, result) => {
                 if (err) reject(err)
                 resolve({ register: true });
             });
@@ -62,7 +64,7 @@ userModel.getIdbyUserName = (userName) => {
         con.query(
             sql, (err, result) => {
                 if (err) reject(err);
-                else if(result[0] != undefined)resolve(result[0].id);
+                else if (result[0] != undefined) resolve(result[0].id);
             });
     });
 }
@@ -147,7 +149,7 @@ function updateRequest(request, id) {
     });
 }
 
-userModel.getFriends = function(id) {
+userModel.getFriends = function (id) {
     return new Promise((resolve, reject) => {
         let sql = `SELECT arkadaslar FROM kullanicilar WHERE id = ${id}`;
         con.query(sql, (err, result) => {
@@ -265,10 +267,10 @@ userModel.blockUser = async (myId, sentId) => {
     let myBlockeds = await userModel.getBlockedUsers(myId);
     myBlockeds.push(sentId);
     myBlockeds = JSON.stringify(myBlockeds);
-    return updateBlockUser(myId,myBlockeds);
+    return updateBlockUser(myId, myBlockeds);
 }
 
-function updateBlockUser(myId,blocked){
+function updateBlockUser(myId, blocked) {
     return new Promise((resolve, reject) => {
         let sql = `UPDATE kullanicilar SET bloklular = "${blocked}" WHERE id = ${myId}`;
         con.query(sql, (err, result) => {
@@ -278,10 +280,25 @@ function updateBlockUser(myId,blocked){
     });
 }
 
-userModel.calcelBlock = async(myId,itsId)=>{
+userModel.calcelBlock = async (myId, itsId) => {
     let myBlockeds = await userModel.getBlockedUsers(myId);
-    myBlockeds.splice( (myBlockeds.indexOf(itsId)),1);
-    return updateBlockUser(myId,JSON.stringify(myBlockeds));
+    myBlockeds.splice((myBlockeds.indexOf(itsId)), 1);
+    return updateBlockUser(myId, JSON.stringify(myBlockeds));
 }
+
+userModel.checkPassword = async (username, password) => {
+    return new Promise((resolve, reject) => {
+        let sql = `SELECT sifre FROM kullanicilar WHERE kullaniciAdi = "${username}"`;
+        con.query(sql,(err,result)=>{
+            if(err) reject(err);
+            if(result[0].sifre == password){
+                resolve(true);
+            }else{
+                resolve(false);
+            }
+        });
+    });
+}
+
 module.exports = userModel;
 

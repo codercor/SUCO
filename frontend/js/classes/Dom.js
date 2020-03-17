@@ -110,7 +110,7 @@ export default class Dom {
     <div class="dropdown-divider"></div>
     <div class="row mt-3">
         <div class="col-3">
-            <input type="password" placeholder="Eski Şifre" class="form-control is-invalid">
+            <input type="password" id="oldPassword" placeholder="Eski Şifre" class="form-control">
         </div>
         <div class="col-3">
             <input type="password" placeholder="Yeni Şifre" class="form-control is-valid">
@@ -184,9 +184,6 @@ export default class Dom {
             }
             else e.target.value = "";
 
-            console.log(e.target.files);
-            console.log(formData.getAll("token"));
-
         });
 
         cpInput.addEventListener("change", (e) => {
@@ -194,8 +191,12 @@ export default class Dom {
             if (image.type == "image/png" || image.type == "image/jpeg" || image.type == "image/jpg") {
                 this.previewImage(image, "cpPreview");
                 formData.append("cp",image);
+                console.log(formData.get("cp"));
+                
             }
             else e.target.value = "";
+            console.log("kapak foto seçildi");
+            
         });
        
         //Onaylama
@@ -206,7 +207,35 @@ export default class Dom {
               });
             console.log(update);
         });
-        cpConfirm.addEventListener("click", () => { });
+        cpConfirm.addEventListener("click", async () => { 
+            let update = await fetch((env.host + env.routes.user.updateCP), {
+                method: 'POST',
+                body: formData
+              });
+            console.log(update);
+        });
+        //password Settings
+
+        let oldPasswordPlace = document.getElementById("oldPassword");
+        oldPasswordPlace.addEventListener("input", async (e)=>{
+            if(e.target.value == ""){
+                oldPasswordPlace.classList.remove("is-invalid");
+                oldPasswordPlace.classList.remove("is-valid");
+                return;
+            }
+            let status = await( Services.postJson(env.routes.user.passwordControl, { username: localStorage.getItem("username") , password:e.target.value }))
+            console.log(status);
+            status = await status.json();
+            console.log(status.status);
+            if(status.status == true){
+                oldPasswordPlace.classList.remove("is-invalid");
+                oldPasswordPlace.classList.add("is-valid");
+            }else{
+                oldPasswordPlace.classList.remove("is-valid");
+                oldPasswordPlace.classList.add("is-invalid");
+            }
+            
+        })
 
     }
     static previewImage(file, imgId) {

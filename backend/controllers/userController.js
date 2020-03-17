@@ -37,14 +37,15 @@ let jwt = require('jsonwebtoken'),
         }
     },
     pp = multer({ storage: ppDiscStorage, fileFilter: fileFilter }).single('pp'),
-    cp = multer({ storage: cpDiscStorage, fileFilter: fileFilter }).single('pp');
+    cp = multer({ storage: cpDiscStorage, fileFilter: fileFilter }).single('cp');
 
 router.post('/register', (req, res) => {
-    console.log("Yeni Kullanıcı Kayıt İsteği");
+    console.log("Yeni Kullanıcı Kayıt İsteği");    
     userModel.register(req.body).then((status) => {
         res.json(status);
     });
     console.log(req.body.adSoyad);
+    
 });
 
 router.post('/login', (req, res) => {
@@ -86,21 +87,25 @@ router.post('/updatePP', async (req, res) => {
 
 router.post('/updateCP', async (req, res) => {
     cp(req, res, async (err) => {
-
-        if (err) res.json({ error: 'file type error' });
+        console.log("1.adım");
+        
+        if (err) {res.json({ error: 'file type error' }); console.log("2.adım"); console.log(err);
+         }
+        
         else {
             let token = req.body.token;
+            console.log("3.adım");
             try {
                 token = jwt.verify(token, require("../config").api_secret_key);
                 // OOOY OY
+                console.log("4.adım");
                 let userName = token.userName;
                 let userId = await userModel.getIdbyUserName(userName);
+                console.log("5.adım");
                 let photoName = token.userName + userId + '.' + req.file.originalname.split('.')[1];
                 fs.renameSync(req.file.path, req.file.destination + photoName);
                 await userModel.updateCP(userId, '/usercp/' + photoName);
-                res.send(`<img src="/usercp/${photoName}" />`);
-                //res.json({ update: "successfull", src:'/userpp/' + photoName})
-
+                res.json({ update: "successfull", src: '/usercp/' + photoName })
             } catch (error) {
                 fs.unlinkSync(req.file.path);
                 res.send("Giriş Yap");
@@ -112,7 +117,10 @@ router.post('/updateCP', async (req, res) => {
 router.post('/getIdByUsername/', async (req,res)=>{
     res.json({username :(await userModel.getUserNamebyId(req.body.id))});
 }) 
-
+router.post('/passwordControl', auth ,async (req,res)=>{
+    let status = await userModel.checkPassword(req.body.username,req.body.password);
+    res.json({status});
+})
 router.post('/:username', auth, blockCheck, async (req, res) => {
     let username = req.params.username;
     let data = await userModel.getUserByUserName(username);
@@ -193,7 +201,7 @@ router.post('/cancelBlock/:username', auth, async (req, res) => {
     await userModel.calcelBlock(myId, sentUserId);
     res.send(`${myUserName} kişisi ${sentUserName} kişisinin engelini kaldırdı.`);
 });
-//BLOCK USER
+//BLOCK USER END
 
 
 

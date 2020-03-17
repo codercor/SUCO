@@ -6,6 +6,8 @@ export class Services {
         if(User.checkToken()) {
             Object.assign(data,data,{token:localStorage.getItem("token")})
         }
+        console.log(env.host + path);
+        
             return await fetch(env.host + path, {
             method: 'post',
             body: JSON.stringify(data),

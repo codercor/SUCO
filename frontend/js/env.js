@@ -12,7 +12,9 @@ export default {
             addFriend:'/user/addFriend/',
             block:'/user/block/',
             deleteFriend:'/user/deleteFriend/',
-            updatePP : '/user/updatePP'
+            updatePP : '/user/updatePP',
+            updateCP : '/user/updateCP',
+            passwordControl :'/user/passwordControl'
         },
         post:{
             post:'/post/',

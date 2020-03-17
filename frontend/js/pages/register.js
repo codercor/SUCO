@@ -11,7 +11,7 @@ async function registerUser(e) {
         email = document.getElementById("email").value,
         password = document.getElementById("password").value,
         repassword = document.getElementById("repassword").value,
-        userData = { name, username, email, password, repassword };
+        userData = { name, username, email, password};
     if (password != repassword) {
         alert("Şifreler eşleşmiyor");
         return;
@@ -32,6 +32,7 @@ async function registerUser(e) {
         }
 
     }, 1000);
+console.log(userData);
 
 
 }
