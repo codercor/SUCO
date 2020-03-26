@@ -126,6 +126,11 @@ router.post('/updatePassword',auth, async (req,res)=>{
     let status = await userModel.updatePassword(id,newPassword);
     res.json(status);
 });
+router.post('/updateUsernameAndName',auth, async (req,res)=>{
+    let {id,newUsername,newName} = req.body; // let id =  req.body.id , let newPassword = req.body.newPassword
+    let status = await userModel.updateUsernameAndName(id,newUsername,newName);
+    res.json(status);
+});
 router.post('/:username', auth, blockCheck, async (req, res) => {
     let username = req.params.username;
     let data = await userModel.getUserByUserName(username);

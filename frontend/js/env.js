@@ -15,7 +15,8 @@ export default {
             updatePP : '/user/updatePP',
             updateCP : '/user/updateCP',
             passwordControl :'/user/passwordControl',
-            updatePassword: '/user/updatePassword'
+            updatePassword: '/user/updatePassword',
+            updateUsernameAndName:'/user/updateUsernameAndName'
         },
         post:{
             post:'/post/',

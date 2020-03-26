@@ -310,5 +310,16 @@ userModel.updatePassword = async(id,newpassword)=>{
         });
     });
 }
+userModel.updateUsernameAndName = async (id,newUsername,newName)=>{
+    return new Promise((resolve,reject)=>{
+        let sql = `UPDATE kullanicilar SET kullaniciAdi = '${newUsername}', adSoyad= '${newName}' WHERE id=${id}`
+        con.query(sql,(err,result)=>{
+            if(err) reject(err);
+            else{
+                resolve({status:'ok'});
+            }
+        });
+    });
+}
 module.exports = userModel;
 

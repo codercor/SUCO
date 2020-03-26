@@ -125,18 +125,18 @@ export default class Dom {
     <div class="dropdown-divider my-4"></div>
     <div class="row">
         <div class="col-5">
-            <input type="text"  value="${user.adSoyad}" class="form-control">
+            <input type="text" id="name" value="${user.adSoyad}" class="form-control">
         </div>
         <div class="col-5">
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                   <span class="input-group-text">@</span>
                 </div>
-                <input type="text" class="form-control is-invalid" value="${user.kullaniciAdi}">
+                <input type="text" id="username" class="form-control" value="${user.kullaniciAdi}">
               </div>
         </div>
         <div class="col-2">
-            <button type="button" class="btn btn-block btn-outline-secondary btn-md">Kaydet</button>
+            <button type="button" id="updateNameAndUsername" class="btn btn-block btn-outline-secondary btn-md">Kaydet</button>
         </div>
     </div>
     <div class="dropdown-divider my-4"></div>
@@ -153,7 +153,8 @@ export default class Dom {
         <div class="col-3">
             <button type="button" class="btn btn-block btn-outline-dark btn-md">Kaydet</button>
         </div>
-    </div>`;
+    </div>
+    <div class="slide-in-fwd-center bounce-out-top" style="position:absolute;display:none;top:10%;left:30%;background:green;width:8vw;height:5vh;text-align:center;padding:.5em;color:white;border-radius:100px;opacity:.7" id="alertMessage">Başarılı</div>`;
         settingsForm.innerHTML += template;
 
         let ppSelect = document.getElementById("ppSelect"),
@@ -239,14 +240,14 @@ export default class Dom {
                 oldPassStatus = false;
             }
         })
-        reNewPasswordPlace.addEventListener("input",() => {
-            if(reNewPasswordPlace.value == newPasswordPlace.value){
+        reNewPasswordPlace.addEventListener("input", () => {
+            if (reNewPasswordPlace.value == newPasswordPlace.value) {
                 reNewPasswordPlace.classList.remove("is-invalid");
                 reNewPasswordPlace.classList.add("is-valid");
                 newPasswordPlace.classList.remove("is-invalid");
                 newPasswordPlace.classList.add("is-valid");
                 newPassStatus = true;
-            }else{
+            } else {
                 reNewPasswordPlace.classList.add("is-invalid");
                 reNewPasswordPlace.classList.remove("is-valid");
                 newPasswordPlace.classList.add("is-invalid");
@@ -254,14 +255,14 @@ export default class Dom {
                 newPassStatus = false;
             }
         });
-        newPasswordPlace.addEventListener("input",() => {
-            if(reNewPasswordPlace.value == newPasswordPlace.value){
+        newPasswordPlace.addEventListener("input", () => {
+            if (reNewPasswordPlace.value == newPasswordPlace.value) {
                 reNewPasswordPlace.classList.remove("is-invalid");
                 reNewPasswordPlace.classList.add("is-valid");
                 newPasswordPlace.classList.remove("is-invalid");
                 newPasswordPlace.classList.add("is-valid");
                 newPassStatus = true;
-            }else{
+            } else {
                 reNewPasswordPlace.classList.add("is-invalid");
                 reNewPasswordPlace.classList.remove("is-valid");
                 newPasswordPlace.classList.add("is-invalid");
@@ -269,15 +270,47 @@ export default class Dom {
                 newPassStatus = false;
             }
         });
-        passwordUpdateButton.addEventListener("click", async()=>{
-            if(oldPassStatus && newPassStatus){
-                let status = await Services.postJson(env.routes.user.updatePassword,{id:user.id,newPassword:newPasswordPlace.value});
+        passwordUpdateButton.addEventListener("click", async () => {
+            if (oldPassStatus && newPassStatus) {
+                let status = await Services.postJson(env.routes.user.updatePassword, { id: user.id, newPassword: newPasswordPlace.value });
                 status = await status.json();
                 console.log(status);
-            }else{
-                
+            } else {
+
             }
         });
+
+        let updateNameAndUsernameButton = document.getElementById("updateNameAndUsername"),
+            namePlace = document.getElementById("name"),
+            usernamePlace = document.getElementById("username"),
+            oldUsername = usernamePlace.value,
+            alertMessage = document.getElementById("alertMessage");
+        updateNameAndUsernameButton.addEventListener("click", async () => {
+            if (namePlace.value == "" || usernamePlace.value == "") {
+                alert("Boş alan bırakılamaz !");
+                return;
+            }
+            // Şükrü Ünlü  (split)->   ["Şükrü","Ünlü"]
+            if ((namePlace.value.split(" ")).length < 2) {
+                alert("Ad Soyad şeklinde yazılmalıdır !");
+                return;
+            }
+
+            let status = await (await Services.postJson(env.routes.user.updateUsernameAndName, { id: user.id, newUsername: usernamePlace.value, newName: namePlace.value })).json();
+            if(status.status == "ok"){
+                alertMessage.innerHTML == "Güncelleme Başarılı";
+                alertMessage.style.display = "block";
+                setTimeout(() => {
+                    alertMessage.style.display = "none";
+                    if(usernamePlace.value != oldUsername){
+                        localStorage.removeItem("token");
+                        localStorage.removeItem("username");
+                        location.href="login.html"
+                    }
+                }, 2000);
+            }
+        });
+
     }
     static previewImage(file, imgId) {
         let reader = new FileReader();
