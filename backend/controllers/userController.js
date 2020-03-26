@@ -120,7 +120,12 @@ router.post('/getIdByUsername/', async (req,res)=>{
 router.post('/passwordControl', auth ,async (req,res)=>{
     let status = await userModel.checkPassword(req.body.username,req.body.password);
     res.json({status});
-})
+});
+router.post('/updatePassword',auth, async (req,res)=>{
+    let {id,newPassword} = req.body; // let id =  req.body.id , let newPassword = req.body.newPassword
+    let status = await userModel.updatePassword(id,newPassword);
+    res.json(status);
+});
 router.post('/:username', auth, blockCheck, async (req, res) => {
     let username = req.params.username;
     let data = await userModel.getUserByUserName(username);
@@ -202,6 +207,7 @@ router.post('/cancelBlock/:username', auth, async (req, res) => {
     res.send(`${myUserName} kişisi ${sentUserName} kişisinin engelini kaldırdı.`);
 });
 //BLOCK USER END
+
 
 
 

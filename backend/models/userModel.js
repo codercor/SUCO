@@ -299,6 +299,16 @@ userModel.checkPassword = async (username, password) => {
         });
     });
 }
-
+userModel.updatePassword = async(id,newpassword)=>{
+    return new Promise((resolve,reject)=>{
+        let sql = `UPDATE kullanicilar SET sifre = '${newpassword}' WHERE id=${id}`
+        con.query(sql,(err,result)=>{
+            if(err) reject(err);
+            else{
+                resolve({status:'ok'});
+            }
+        });
+    });
+}
 module.exports = userModel;
 

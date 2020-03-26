@@ -14,7 +14,8 @@ export default {
             deleteFriend:'/user/deleteFriend/',
             updatePP : '/user/updatePP',
             updateCP : '/user/updateCP',
-            passwordControl :'/user/passwordControl'
+            passwordControl :'/user/passwordControl',
+            updatePassword: '/user/updatePassword'
         },
         post:{
             post:'/post/',
