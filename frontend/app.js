@@ -4,6 +4,7 @@ import index from './js/pages/index.js';
 import post from './js/pages/post.js';
 import profile from './js/pages/profile.js';
 import settings from "./js/pages/settings.js";
+
 let URL = document.URL,
 page = URL.split('/')[URL.split('/').length-1]
 if(page.search("login.html") == 0) login();

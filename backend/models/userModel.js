@@ -289,37 +289,51 @@ userModel.calcelBlock = async (myId, itsId) => {
 userModel.checkPassword = async (username, password) => {
     return new Promise((resolve, reject) => {
         let sql = `SELECT sifre FROM kullanicilar WHERE kullaniciAdi = "${username}"`;
-        con.query(sql,(err,result)=>{
-            if(err) reject(err);
-            if(result[0].sifre == password){
+        con.query(sql, (err, result) => {
+            if (err) reject(err);
+            if (result[0].sifre == password) {
                 resolve(true);
-            }else{
+            } else {
                 resolve(false);
             }
         });
     });
 }
-userModel.updatePassword = async(id,newpassword)=>{
-    return new Promise((resolve,reject)=>{
+userModel.updatePassword = async (id, newpassword) => {
+    return new Promise((resolve, reject) => {
         let sql = `UPDATE kullanicilar SET sifre = '${newpassword}' WHERE id=${id}`
-        con.query(sql,(err,result)=>{
-            if(err) reject(err);
-            else{
-                resolve({status:'ok'});
+        con.query(sql, (err, result) => {
+            if (err) reject(err);
+            else {
+                resolve({ status: 'ok' });
             }
         });
     });
 }
-userModel.updateUsernameAndName = async (id,newUsername,newName)=>{
-    return new Promise((resolve,reject)=>{
+userModel.updateUsernameAndName = async (id, newUsername, newName) => {
+    return new Promise((resolve, reject) => {
         let sql = `UPDATE kullanicilar SET kullaniciAdi = '${newUsername}', adSoyad= '${newName}' WHERE id=${id}`
-        con.query(sql,(err,result)=>{
-            if(err) reject(err);
-            else{
-                resolve({status:'ok'});
+        con.query(sql, (err, result) => {
+            if (err) reject(err);
+            else {
+                resolve({ status: 'ok' });
             }
         });
     });
+}
+userModel.updateInfo = async(id,info) => {
+    info = JSON.stringify(info);
+    
+    return new Promise((resolve,reject)=>{
+            let sql = `UPDATE kullanicilar SET kisiselBilgi = '${info}' WHERE id = ${id}`;
+            con.query(sql,(err,result)=>{
+                if(err) reject(err);
+                else {
+                    resolve("ok");
+                }
+            })
+    });
+        
 }
 module.exports = userModel;
 

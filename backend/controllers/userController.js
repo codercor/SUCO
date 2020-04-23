@@ -40,12 +40,12 @@ let jwt = require('jsonwebtoken'),
     cp = multer({ storage: cpDiscStorage, fileFilter: fileFilter }).single('cp');
 
 router.post('/register', (req, res) => {
-    console.log("Yeni Kullanıcı Kayıt İsteği");    
+    console.log("Yeni Kullanıcı Kayıt İsteği");
     userModel.register(req.body).then((status) => {
         res.json(status);
     });
     console.log(req.body.adSoyad);
-    
+
 });
 
 router.post('/login', (req, res) => {
@@ -88,10 +88,11 @@ router.post('/updatePP', async (req, res) => {
 router.post('/updateCP', async (req, res) => {
     cp(req, res, async (err) => {
         console.log("1.adım");
-        
-        if (err) {res.json({ error: 'file type error' }); console.log("2.adım"); console.log(err);
-         }
-        
+
+        if (err) {
+            res.json({ error: 'file type error' }); console.log("2.adım"); console.log(err);
+        }
+
         else {
             let token = req.body.token;
             console.log("3.adım");
@@ -114,23 +115,29 @@ router.post('/updateCP', async (req, res) => {
     });
 
 });
-router.post('/getIdByUsername/', async (req,res)=>{
-    res.json({username :(await userModel.getUserNamebyId(req.body.id))});
-}) 
-router.post('/passwordControl', auth ,async (req,res)=>{
-    let status = await userModel.checkPassword(req.body.username,req.body.password);
-    res.json({status});
+router.post('/getIdByUsername/', async (req, res) => {
+    res.json({ username: (await userModel.getUserNamebyId(req.body.id)) });
+})
+router.post('/passwordControl', auth, async (req, res) => {
+    let status = await userModel.checkPassword(req.body.username, req.body.password);
+    res.json({ status });
 });
-router.post('/updatePassword',auth, async (req,res)=>{
-    let {id,newPassword} = req.body; // let id =  req.body.id , let newPassword = req.body.newPassword
-    let status = await userModel.updatePassword(id,newPassword);
+router.post('/updatePassword', auth, async (req, res) => {
+    let { id, newPassword } = req.body; // let id =  req.body.id , let newPassword = req.body.newPassword
+    let status = await userModel.updatePassword(id, newPassword);
     res.json(status);
 });
-router.post('/updateUsernameAndName',auth, async (req,res)=>{
-    let {id,newUsername,newName} = req.body; // let id =  req.body.id , let newPassword = req.body.newPassword
-    let status = await userModel.updateUsernameAndName(id,newUsername,newName);
+router.post('/updateUsernameAndName', auth, async (req, res) => {
+    let { id, newUsername, newName } = req.body; // let id =  req.body.id , let newPassword = req.body.newPassword
+    let status = await userModel.updateUsernameAndName(id, newUsername, newName);
     res.json(status);
 });
+router.post('/updateInfo', auth, async (req, res) => {
+    const info = req.body.data,
+        id = req.body.id;
+    await userModel.updateInfo(id,info);
+    res.sendStatus(200)
+})
 router.post('/:username', auth, blockCheck, async (req, res) => {
     let username = req.params.username;
     let data = await userModel.getUserByUserName(username);
@@ -141,19 +148,19 @@ router.post('/:username', auth, blockCheck, async (req, res) => {
 
     let myFriends = await userModel.getFriends(myId);
     if (tokenUserName.userName == username) {
-        Object.assign(data[0], data[0], { myProfile: true ,friend: true, posts: itsPosts})
+        Object.assign(data[0], data[0], { myProfile: true, friend: true, posts: itsPosts })
     } else {
-      
+
         if (myFriends.includes(itsId)) {
             Object.assign(data[0], data[0], { friend: true, posts: itsPosts });
         } else {
-            Object.assign(data[0], data[0], {friend: false, posts: itsPosts.filter((post) => { if (post.gizlilik == 0) return post; })});
+            Object.assign(data[0], data[0], { friend: false, posts: itsPosts.filter((post) => { if (post.gizlilik == 0) return post; }) });
         }
-       
-        }
-       if(data[0] != undefined) res.json(data[0]);
-       else res.json({error:"user not found"})
-    });
+
+    }
+    if (data[0] != undefined) res.json(data[0]);
+    else res.json({ error: "user not found" })
+});
 
 async function getUsernamesAndIdes(req) {
     let myUserName = jwt.verify(req.body.token, require("../config").api_secret_key).userName;
