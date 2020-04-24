@@ -114,7 +114,7 @@ Sidebar = `     <aside class="main-sidebar sidebar-dark-primary elevation-4">
                 </a>
             </li>
             <li class="nav-item">
-                <a href="profile.html" class="nav-link">
+                <a href="profile.html" class="nav-link sidebar-profile">
                     <i class="nav-icon fas fa-cog"></i>
                     <p>
                         Profil
@@ -132,10 +132,11 @@ Sidebar = `     <aside class="main-sidebar sidebar-dark-primary elevation-4">
 export default class Dom {
     static async standartRender(data) {
         let wrapper = document.getElementsByClassName("wrapper")[0];
-       // wrapper.insertAdjacentHTML("afterbegin",Sidebar);
-       // wrapper.insertAdjacentHTML("afterbegin",Navbar);
+        wrapper.insertAdjacentHTML("afterbegin",Sidebar);
+        wrapper.insertAdjacentHTML("afterbegin",Navbar);
         let myNamePlace = Array.from(document.getElementsByClassName("my-user-name"));
         let myPhotoPlace = Array.from(document.getElementsByClassName("my-photo"));
+        let sidebarProfileLink = document.getElementsByClassName("sidebar-profile")[0];
         myNamePlace.forEach(el => {
             el.innerHTML = `<a href="/frontend/profile.html?user=${data.kullaniciAdi}">` + data.adSoyad + '</a>';
         });
@@ -145,7 +146,15 @@ export default class Dom {
             parent.innerHTML += `<a href="/frontend/profile.html?user=${data.kullaniciAdi}">  <img src="${env.host + data.profilResmi}" class="img-circle my-photo" style="height: 30px;"
             alt="User Image">`+ '</a>';
         });
+        sidebarProfileLink.href = `profile.html?user=${data.kullaniciAdi}`;
         await this.initFriendRequestsButton(data);
+        this.stopLoadingPlaceholder(); 
+    }
+    static stopLoadingPlaceholder(){
+            let elements = Array.from(document.getElementsByClassName("loading-placeholder"));
+            elements.forEach((element)=>{
+               element.parentElement.removeChild(element);
+            });
     }
     static loading(status) {
         let postsPlace = document.getElementById("postsPlace");
