@@ -61,7 +61,7 @@ const Navbar = `  <nav class="main-header navbar navbar-expand navbar-white navb
     </li>
 </ul>
 </nav>`,
-Sidebar = `     <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    Sidebar = `     <aside class="main-sidebar sidebar-dark-primary elevation-4">
 <!-- Brand Logo -->
 <a href="index.html" class="brand-link">
     <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
@@ -128,12 +128,12 @@ Sidebar = `     <aside class="main-sidebar sidebar-dark-primary elevation-4">
 </div>
 <!-- /.sidebar -->
 </aside>`;
-let timeOut = setTimeout(()=>{});
+let timeOut = setTimeout(() => { });
 export default class Dom {
     static async standartRender(data) {
         let wrapper = document.getElementsByClassName("wrapper")[0];
-        wrapper.insertAdjacentHTML("afterbegin",Sidebar);
-        wrapper.insertAdjacentHTML("afterbegin",Navbar);
+        wrapper.insertAdjacentHTML("afterbegin", Sidebar);
+        wrapper.insertAdjacentHTML("afterbegin", Navbar);
         let searchBar = document.querySelector("input[placeholder='Ara...']");
         let myNamePlace = Array.from(document.getElementsByClassName("my-user-name"));
         let myPhotoPlace = Array.from(document.getElementsByClassName("my-photo"));
@@ -148,24 +148,24 @@ export default class Dom {
             alt="User Image">`+ '</a>';
         });
 
-        
-        searchBar.addEventListener("keydown",this.searchRouter)
+
+        searchBar.addEventListener("keydown", this.searchRouter)
         sidebarProfileLink.href = `profile.html?user=${data.kullaniciAdi}`;
         await this.initFriendRequestsButton(data);
-        this.stopLoadingPlaceholder(); 
+        this.stopLoadingPlaceholder();
     }
-    static searchRouter(e){
-            if(e.key == "Enter") e.preventDefault();
-            clearTimeout(timeOut);
-            timeOut = setTimeout(()=>{
-                  location.href = "search.html?keyword="+e.target.value;
-            },700);
+    static searchRouter(e) {
+        if (e.key == "Enter") e.preventDefault();
+        clearTimeout(timeOut);
+        timeOut = setTimeout(() => {
+            location.href = "search.html?keyword=" + e.target.value;
+        }, 700);
     }
-    static stopLoadingPlaceholder(){
-            let elements = Array.from(document.getElementsByClassName("loading-placeholder"));
-            elements.forEach((element)=>{
-               element.parentElement.removeChild(element);
-            });
+    static stopLoadingPlaceholder() {
+        let elements = Array.from(document.getElementsByClassName("loading-placeholder"));
+        elements.forEach((element) => {
+            element.parentElement.removeChild(element);
+        });
     }
     static loading(status) {
         let postsPlace = document.getElementById("postsPlace");
@@ -368,32 +368,32 @@ export default class Dom {
 
         //info Settings
         const saveInfoButton = document.getElementById("saveInfoButton"),
-              memleketInput = document.getElementById("memleketInput"),
-              dogumInput = document.getElementById("dogumInput"),
-              meslekInput = document.getElementById("meslekInput");
-        
-        saveInfoButton.addEventListener("click",saveInfo);
+            memleketInput = document.getElementById("memleketInput"),
+            dogumInput = document.getElementById("dogumInput"),
+            meslekInput = document.getElementById("meslekInput");
+
+        saveInfoButton.addEventListener("click", saveInfo);
         let kisiselBilgi = JSON.parse(user.kisiselBilgi);
         console.log(kisiselBilgi);
-        memleketInput.value =  kisiselBilgi.memleket ||"";
-        dogumInput.value =  kisiselBilgi.dogum || "";
-        meslekInput.value =  kisiselBilgi.meslek || "";
+        memleketInput.value = kisiselBilgi.memleket || "";
+        dogumInput.value = kisiselBilgi.dogum || "";
+        meslekInput.value = kisiselBilgi.meslek || "";
         async function saveInfo() {
             let data = {};
 
             if (memleketInput.value.trim() != "") {
-                   data.memleket = memleketInput.value;
+                data.memleket = memleketInput.value;
             }
-            if(dogumInput.value.trim() != ""){
+            if (dogumInput.value.trim() != "") {
                 data.dogum = dogumInput.value;
             }
-            if(meslekInput.value.trim() != ""){
+            if (meslekInput.value.trim() != "") {
                 data.meslek = meslekInput.value;
             }
-            await Services.postJson(env.routes.user.updateInfo,{data, id:user.id});
+            await Services.postJson(env.routes.user.updateInfo, { data, id: user.id });
             console.log("Update successful !");
-            
-            
+
+
         }
 
 
@@ -482,15 +482,15 @@ export default class Dom {
             }
 
             let status = await (await Services.postJson(env.routes.user.updateUsernameAndName, { id: user.id, newUsername: usernamePlace.value, newName: namePlace.value })).json();
-            if(status.status == "ok"){
+            if (status.status == "ok") {
                 alertMessage.innerHTML == "Güncelleme Başarılı";
                 alertMessage.style.display = "block";
                 setTimeout(() => {
                     alertMessage.style.display = "none";
-                    if(usernamePlace.value != oldUsername){
+                    if (usernamePlace.value != oldUsername) {
                         localStorage.removeItem("token");
                         localStorage.removeItem("username");
-                        location.href="login.html"
+                        location.href = "login.html"
                     }
                 }, 2000);
             }
@@ -1028,18 +1028,37 @@ export default class Dom {
     static async searchResults() {
         let searchBar = document.querySelector("input[placeholder='Ara...']");
         let keyword = (new URLSearchParams(window.location.search)).get("keyword")
-        searchBar.removeEventListener("keydown",this.searchRouter);
-        searchBar.value = keyword;  
+        searchBar.removeEventListener("keydown", this.searchRouter);
+        searchBar.value = keyword;
         this.searchUsers(keyword);
-        searchBar.addEventListener("keyup",()=>{
+        searchBar.addEventListener("keyup", () => {
             this.searchUsers(searchBar.value)
         });
     }
-    static async searchUsers(keyword){
-        if(keyword.trim() == "") return;
-        let result = await Services.postJson(env.routes.user.search,{keyword});
-        result = await result.json();
-        console.log(result);
-        
+    static async searchUsers(keyword) {
+        if (keyword.trim() == "") return;
+        let results = await Services.postJson(env.routes.user.search, { keyword });
+        results = (await results.json()).results;    
+        this.drawSearchResults(results)
+
+    }
+    static async drawSearchResults(users) {
+        let searchResults = document.getElementById('searchResults');
+        searchResults.innerHTML = '';
+        users.forEach((item)=>{
+            searchResults.innerHTML += `<div class="col-md-6 col-sm-12">
+            <div class="card card-outline card-primary">
+                <div class="card-body d-flex justify-content-between">
+                    <img class="direct-chat-img" src="${env.host + item.profilResmi}">
+                    <span>
+                        <h3>${item.adSoyad}</h3>
+                    </span>
+                        <a  href="profile.html?user=${item.kullaniciAdi}" class="d-inline btn btn-primary text-light">Profile Git</a>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>`;
+        });
     }
 }

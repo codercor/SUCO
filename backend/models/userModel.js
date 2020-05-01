@@ -321,19 +321,31 @@ userModel.updateUsernameAndName = async (id, newUsername, newName) => {
         });
     });
 }
-userModel.updateInfo = async(id,info) => {
+userModel.updateInfo = async (id, info) => {
     info = JSON.stringify(info);
-    
-    return new Promise((resolve,reject)=>{
-            let sql = `UPDATE kullanicilar SET kisiselBilgi = '${info}' WHERE id = ${id}`;
-            con.query(sql,(err,result)=>{
-                if(err) reject(err);
-                else {
-                    resolve("ok");
-                }
-            })
+
+    return new Promise((resolve, reject) => {
+        let sql = `UPDATE kullanicilar SET kisiselBilgi = '${info}' WHERE id = ${id}`;
+        con.query(sql, (err, result) => {
+            if (err) reject(err);
+            else {
+                resolve("ok");
+            }
+        })
     });
-        
+
+}
+userModel.search = async (keyword) => {
+    let promise = new Promise((resolve, reject) => {
+        let sql = `SELECT * FROM kullanicilar WHERE adSoyad LIKE '%${keyword}%'`;
+        con.query(sql, (err, result) => {
+            if (err) reject(err);
+            else {
+                resolve(result);
+            }
+        });
+    });
+    return promise;
 }
 module.exports = userModel;
 
