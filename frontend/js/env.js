@@ -17,7 +17,8 @@ export default {
             passwordControl :'/user/passwordControl',
             updatePassword: '/user/updatePassword',
             updateUsernameAndName:'/user/updateUsernameAndName',
-            updateInfo:'/user/updateInfo'
+            updateInfo:'/user/updateInfo',
+            search:'/user/search',
         },
         post:{
             post:'/post/',

@@ -128,12 +128,13 @@ Sidebar = `     <aside class="main-sidebar sidebar-dark-primary elevation-4">
 </div>
 <!-- /.sidebar -->
 </aside>`;
-
+let timeOut = setTimeout(()=>{});
 export default class Dom {
     static async standartRender(data) {
         let wrapper = document.getElementsByClassName("wrapper")[0];
         wrapper.insertAdjacentHTML("afterbegin",Sidebar);
         wrapper.insertAdjacentHTML("afterbegin",Navbar);
+        let searchBar = document.querySelector("input[placeholder='Ara...']");
         let myNamePlace = Array.from(document.getElementsByClassName("my-user-name"));
         let myPhotoPlace = Array.from(document.getElementsByClassName("my-photo"));
         let sidebarProfileLink = document.getElementsByClassName("sidebar-profile")[0];
@@ -146,9 +147,19 @@ export default class Dom {
             parent.innerHTML += `<a href="/frontend/profile.html?user=${data.kullaniciAdi}">  <img src="${env.host + data.profilResmi}" class="img-circle my-photo" style="height: 30px;"
             alt="User Image">`+ '</a>';
         });
+
+        
+        searchBar.addEventListener("keydown",this.searchRouter)
         sidebarProfileLink.href = `profile.html?user=${data.kullaniciAdi}`;
         await this.initFriendRequestsButton(data);
         this.stopLoadingPlaceholder(); 
+    }
+    static searchRouter(e){
+            if(e.key == "Enter") e.preventDefault();
+            clearTimeout(timeOut);
+            timeOut = setTimeout(()=>{
+                  location.href = "search.html?keyword="+e.target.value;
+            },700);
     }
     static stopLoadingPlaceholder(){
             let elements = Array.from(document.getElementsByClassName("loading-placeholder"));
@@ -1012,5 +1023,23 @@ export default class Dom {
             });
         }
 
+    }
+
+    static async searchResults() {
+        let searchBar = document.querySelector("input[placeholder='Ara...']");
+        let keyword = (new URLSearchParams(window.location.search)).get("keyword")
+        searchBar.removeEventListener("keydown",this.searchRouter);
+        searchBar.value = keyword;  
+        this.searchUsers(keyword);
+        searchBar.addEventListener("keyup",()=>{
+            this.searchUsers(searchBar.value)
+        });
+    }
+    static async searchUsers(keyword){
+        if(keyword.trim() == "") return;
+        let result = await Services.postJson(env.routes.user.search,{keyword});
+        result = await result.json();
+        console.log(result);
+        
     }
 }

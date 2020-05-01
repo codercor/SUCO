@@ -132,6 +132,11 @@ router.post('/updateUsernameAndName', auth, async (req, res) => {
     let status = await userModel.updateUsernameAndName(id, newUsername, newName);
     res.json(status);
 });
+router.post('/search',auth, async (req,res)=>{
+    const keyword = req.body.keyword;
+    console.log(keyword);
+    res.json({data:"selami"});
+});
 router.post('/updateInfo', auth, async (req, res) => {
     const info = req.body.data,
         id = req.body.id;
