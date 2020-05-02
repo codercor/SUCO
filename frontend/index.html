@@ -566,6 +566,14 @@ to get the desired effect
             });
         })
     </script>
+    <script src="http://localhost:85/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io.connect('http://localhost:85');
+  socket.on('news', (data) => {
+    console.log(data);
+    socket.emit('my other event', { my: 'data' });
+  });
+    </script>
 </body>
 
 </html>
