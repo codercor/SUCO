@@ -1340,7 +1340,7 @@ export default class Dom {
         </div>
         <div class="col-6">
             <div class="row">
-                <div class="col-2  ml-auto fixed-bottom">
+                <div id="messenger-box" class="col-2 ml-auto fixed-bottom">
                     <div
                         class="card card-primary direct-chat direct-chat-contacts-open d-lg-block d-xl-block  direct-chat-danger">
                         <div class="card-header">
@@ -1451,47 +1451,63 @@ export default class Dom {
     </div>`;
     this.drawChatFriends();
   }
-  static openDirectMessage() {
-    const directMessage = document.getElementById("directMessage");
+  static openDirectMessage(adSoyad, kullaniciAdi) {
+    const directMessage = document.getElementById("directMessage"),
+      friendName = document.querySelector("#directMessage .card-title");
+    friendName.innerHTML = adSoyad;
     directMessage.style.display = "block";
   }
   static async drawChatFriends() {
-    let template = `     <li class="chat-online-user">
-                                        <a href="#">
-                                            <img class="contacts-list-img" src="dist/img/user1-128x128.jpg">
-
-                                            <div class="contacts-list-info">
-                                                <span class="contacts-list-name">
-                                                    Count Dracula
-                                                    <small class="contacts-list-date float-right">2/28/2015</small>
-                                                </span>
-                                            </div>
-                                            <!-- /.contacts-list-info -->
-                                        </a>
-                                    </li>`;
     let user = await User.getUserData(localStorage.getItem("username")),
       friendsIdies = eval(user.arkadaslar),
-      friends = [];
-    console.log("Friends crated");
-
+      friends = [],
+      contactsListUl = document.getElementsByClassName("contacts-list")[0];
     for (let i = 0; i < friendsIdies.length; i++) {
-      console.log("Friends for loop :" + (i + 1));
       let username = (await User.getUserNameById(friendsIdies[i])).username;
-      console.log("Friends get username");
       let userData = await User.getUserData(username);
-      console.log("Friends get user data");
       friends.push(userData);
-      console.log("Friends pushed");
     }
 
     console.log(friends);
+    for (let i = 0; i < friends.length; i++) {
+      contactsListUl.innerHTML += `<li class="chat-online-user" kullaniciAdi="${
+        friends[i].kullaniciAdi
+      }" adSoyad="${friends[i].adSoyad}"><a href="#">
+      <img class="contacts-list-img" src="${env.host + friends[i].profilResmi}">
+            <div class="contacts-list-info">
+                <span class="contacts-list-name">
+                     ${friends[i].adSoyad}
+                     <small class="contacts-list-date float-right"><i class="fas fa-circle"></i></small>
+                </span>
+            </div>
+            <!-- /.contacts-list-info -->
+        </a>
+    </li>`;
+    }
     // Arkadaşlar çekildi ve bunu chat-contants divine eklemek gerekiyor.
     let chatOnlineUser = document.getElementsByClassName("chat-online-user");
     chatOnlineUser = Array.from(chatOnlineUser);
     chatOnlineUser.forEach((user) => {
-      user.addEventListener("click", () => {
-        this.openDirectMessage();
+      user.addEventListener("click", (event) => {
+        let element = event.target;
+        while (element.tagName != "LI") {
+          element = element.parentElement;
+        }
+        let adSoyad = element.getAttribute("adsoyad"),
+          kullaniciAdi = element.getAttribute("kullaniciAdi");
+        console.log(adSoyad);
+        this.openDirectMessage(adSoyad, kullaniciAdi);
       });
     });
+  }
+  static messengerConnection(status) {
+    const messengerBox = document.getElementById("messenger-box");
+    if (status) {
+      messengerBox.classList.remove("bg-secondary");
+      messengerBox.style.opacity = "1";
+    } else {
+      messengerBox.classList.add("bg-secondary");
+      messengerBox.style.opacity = "0.5";
+    }
   }
 }
