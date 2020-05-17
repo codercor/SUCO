@@ -1340,9 +1340,9 @@ export default class Dom {
         </div>
         <div class="col-6">
             <div class="row">
-                <div id="messenger-box" class="col-2 ml-auto fixed-bottom">
+                <div id="messenger-box" class="col-4 col-md-4  ml-auto fixed-bottom">
                     <div
-                        class="card card-primary direct-chat direct-chat-contacts-open d-lg-block d-xl-block  direct-chat-danger">
+                        class="card card-primary direct-chat direct-chat-contacts-open d-lg-block d-xl-block  direct-chat-danger collapsed-card">
                         <div class="card-header">
                             <h3 class="card-title">Mesajlaş</h3>
 
@@ -1355,7 +1355,7 @@ export default class Dom {
                             </div>
                         </div>
                         <!-- /.card-header -->
-                        <div style="height: 250px !important;" class="card-body">
+                        <div style="height: 250px !important;display:none" class="card-body">
                             <!-- Conversations are loaded here -->
                             <div class="direct-chat-messages">
                                 <!-- Message. Default to the left -->
@@ -1406,7 +1406,7 @@ export default class Dom {
                             <!-- /.direct-chat-pane -->
                         </div>
                         <!-- /.card-body -->
-                        <div class="card-footer">
+                        <div class="card-footer" style="display:none">
                             <form action="#" method="post">
                                 <div class="input-group">
                                     <input type="text" name="message" placeholder="Arkadaş Ara..." class="form-control">
@@ -1449,7 +1449,6 @@ export default class Dom {
             <!-- /.modal-dialog -->
         </div>
     </div>`;
-    this.drawChatFriends();
   }
   static openDirectMessage(adSoyad, kullaniciAdi) {
     const directMessage = document.getElementById("directMessage"),
@@ -1457,7 +1456,8 @@ export default class Dom {
     friendName.innerHTML = adSoyad;
     directMessage.style.display = "block";
   }
-  static async drawChatFriends() {
+
+  static async drawChatFriends(onlineList) {
     let user = await User.getUserData(localStorage.getItem("username")),
       friendsIdies = eval(user.arkadaslar),
       friends = [],
@@ -1467,8 +1467,6 @@ export default class Dom {
       let userData = await User.getUserData(username);
       friends.push(userData);
     }
-
-    console.log(friends);
     for (let i = 0; i < friends.length; i++) {
       contactsListUl.innerHTML += `<li class="chat-online-user" kullaniciAdi="${
         friends[i].kullaniciAdi
@@ -1477,12 +1475,23 @@ export default class Dom {
             <div class="contacts-list-info">
                 <span class="contacts-list-name">
                      ${friends[i].adSoyad}
-                     <small class="contacts-list-date float-right"><i class="fas fa-circle"></i></small>
+                     <small class="contacts-list-date float-right"><i  class="fas primary  fa-circle"></i></small>
                 </span>
             </div>
             <!-- /.contacts-list-info -->
         </a>
     </li>`;
+      // Burda arkadaşlar ve online arkadaşların kesişim kümesini bulmak için arra'yin elemanlarını string' çeviriyoruz
+      let friendsStr = friends.map((f) => {
+        return f.kullaniciAdi;
+      });
+      let onlineStr = onlineList.map((o) => {
+        return o.username;
+      });
+      let onlineFriends = friendsStr.filter((f) => onlineStr.includes(f));
+      console.log(onlineFriends);
+
+      //  HEM ONLİNE HEM ARKADAŞIMIZ OLANLARN K.ADLARINI TUTUYORUZ BURADA KALDIK ///
     }
     // Arkadaşlar çekildi ve bunu chat-contants divine eklemek gerekiyor.
     let chatOnlineUser = document.getElementsByClassName("chat-online-user");
