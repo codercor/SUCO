@@ -1,11 +1,9 @@
 import DOM from "./classes/Dom.js";
 import User from "./classes/User.js";
 let socket,
-  connectionInterval,
   onlineList = [];
 export default async function () {
   let user = await User.getUserData(localStorage.getItem("username"));
-  console.log(user);
   connect();
   DOM.drawChat();
 }
@@ -31,7 +29,7 @@ function connect() {
 
   socket.on("online-list-update", (data) => {
     onlineList = data;
-    DOM.drawChatFriends(onlineList);
+    onlineList = DOM.drawChatFriends(onlineList);
   });
 
   console.log(socket);

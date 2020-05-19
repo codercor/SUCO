@@ -1283,38 +1283,7 @@ export default class Dom {
                             <!-- Conversations are loaded here -->
                             <div class="direct-chat-messages">
                                 <!-- Message. Default to the left -->
-                                <div class="direct-chat-msg">
-                                    <div class="direct-chat-infos clearfix">
-                                        <span class="direct-chat-name float-left">Alexander Pierce</span>
-                                        <span class="direct-chat-timestamp float-right">23 Jan 2:00 pm</span>
-                                    </div>
-                                    <!-- /.direct-chat-infos -->
-                                    <img class="direct-chat-img" src="dist/img/user1-128x128.jpg"
-                                        alt="Message User Image">
-                                    <!-- /.direct-chat-img -->
-                                    <div class="direct-chat-text">
-                                        Is this template really for free? That's unbelievable!
-                                    </div>
-                                    <!-- /.direct-chat-text -->
-                                </div>
-                                <!-- /.direct-chat-msg -->
-
-                                <!-- Message to the right -->
-                                <div class="direct-chat-msg right">
-                                    <div class="direct-chat-infos clearfix">
-                                        <span class="direct-chat-name float-right">Sarah Bullock</span>
-                                        <span class="direct-chat-timestamp float-left">23 Jan 2:05 pm</span>
-                                    </div>
-                                    <!-- /.direct-chat-infos -->
-                                    <img class="direct-chat-img" src="dist/img/user3-128x128.jpg"
-                                        alt="Message User Image">
-                                    <!-- /.direct-chat-img -->
-                                    <div class="direct-chat-text">
-                                        You better believe it!
-                                    </div>
-                                    <!-- /.direct-chat-text -->
-                                </div>
-                                <!-- /.direct-chat-msg -->
+                               <!-- MESAJLAŞMA ALANI  -->
                             </div>
                             <!--/.direct-chat-messages-->
 
@@ -1340,7 +1309,7 @@ export default class Dom {
         </div>
         <div class="col-6">
             <div class="row">
-                <div id="messenger-box" class="col-4 col-md-4  ml-auto fixed-bottom">
+                <div id="messenger-box" class="col-2  ml-auto fixed-bottom">
                     <div
                         class="card card-primary direct-chat direct-chat-contacts-open d-lg-block d-xl-block  direct-chat-danger collapsed-card">
                         <div class="card-header">
@@ -1458,15 +1427,11 @@ export default class Dom {
   }
 
   static async drawChatFriends(onlineList) {
-    let user = await User.getUserData(localStorage.getItem("username")),
-      friendsIdies = eval(user.arkadaslar),
-      friends = [],
+    let friends = await User.getFriends(localStorage.getItem("username")),
       contactsListUl = document.getElementsByClassName("contacts-list")[0];
-    for (let i = 0; i < friendsIdies.length; i++) {
-      let username = (await User.getUserNameById(friendsIdies[i])).username;
-      let userData = await User.getUserData(username);
-      friends.push(userData);
-    }
+    contactsListUl.innerHTML = "";
+    let onlineFriendsTemp;
+    let onlineFriends;
     for (let i = 0; i < friends.length; i++) {
       contactsListUl.innerHTML += `<li class="chat-online-user" kullaniciAdi="${
         friends[i].kullaniciAdi
@@ -1488,15 +1453,28 @@ export default class Dom {
       let onlineStr = onlineList.map((o) => {
         return o.username;
       });
-      let onlineFriends = friendsStr.filter((f) => onlineStr.includes(f));
-      console.log(onlineFriends);
+      onlineFriendsTemp = friendsStr.filter((f) => onlineStr.includes(f));
+      onlineFriends = onlineFriendsTemp.map((ofu) => {
+        let data = onlineList.find((o) => {
+          return o.username == ofu;
+        });
+        return data;
+      });
 
       //  HEM ONLİNE HEM ARKADAŞIMIZ OLANLARN K.ADLARINI TUTUYORUZ BURADA KALDIK ///
     }
     // Arkadaşlar çekildi ve bunu chat-contants divine eklemek gerekiyor.
     let chatOnlineUser = document.getElementsByClassName("chat-online-user");
     chatOnlineUser = Array.from(chatOnlineUser);
+
     chatOnlineUser.forEach((user) => {
+      if (onlineFriendsTemp.includes(user.getAttribute("kullaniciAdi"))) {
+        let onlineStatusDot =
+          user.firstChild.firstChild.nextSibling.nextSibling.nextSibling
+            .firstChild.nextSibling.firstChild.nextSibling.firstChild;
+        onlineStatusDot.classList.add("text-success");
+      }
+
       user.addEventListener("click", (event) => {
         let element = event.target;
         while (element.tagName != "LI") {
@@ -1504,10 +1482,10 @@ export default class Dom {
         }
         let adSoyad = element.getAttribute("adsoyad"),
           kullaniciAdi = element.getAttribute("kullaniciAdi");
-        console.log(adSoyad);
         this.openDirectMessage(adSoyad, kullaniciAdi);
       });
     });
+    return onlineFriends;
   }
   static messengerConnection(status) {
     const messengerBox = document.getElementById("messenger-box");
