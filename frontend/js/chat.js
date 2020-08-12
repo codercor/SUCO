@@ -26,11 +26,8 @@ function connect() {
   socket.on("disconnect", () => {
     DOM.messengerConnection(false);
   });
-
   socket.on("online-list-update", (data) => {
     onlineList = data;
-    onlineList = DOM.drawChatFriends(onlineList);
+    onlineList = DOM.drawChatFriends(onlineList, socket);
   });
-
-  console.log(socket);
 }

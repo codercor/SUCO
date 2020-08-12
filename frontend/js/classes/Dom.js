@@ -1292,12 +1292,12 @@ export default class Dom {
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer" style="display: block;">
-                            <form action="#" method="post">
+                            <form id="message-form">
                                 <div class="input-group">
                                     <input type="text" name="message" placeholder="Type Message ..."
                                         class="form-control">
                                     <span class="input-group-append">
-                                        <button type="submit" class="btn btn-success">Send</button>
+                                        <button type="submit" id="message-send-button" class="btn btn-success">Send</button>
                                     </span>
                                 </div>
                             </form>
@@ -1419,14 +1419,65 @@ export default class Dom {
         </div>
     </div>`;
   }
-  static openDirectMessage(adSoyad, kullaniciAdi) {
+  static messages = [];
+  static openDirectMessage(adSoyad, user, socket) {
+    this.addEventsMessage(socket, user);
     const directMessage = document.getElementById("directMessage"),
       friendName = document.querySelector("#directMessage .card-title");
     friendName.innerHTML = adSoyad;
     directMessage.style.display = "block";
   }
+  static getMessages(data, itsMe = false) {
+    const directChatMessages = document.querySelector(".direct-chat-messages");
+    if (itsMe) {
+      directChatMessages.innerHTML += `<div class="direct-chat-msg right">
+    <div class="direct-chat-infos clearfix">
+    </div>
+    <!-- /.direct-chat-infos -->
+    <img class="direct-chat-img" src="dist/img/user3-128x128.jpg" alt="Message User Image">
+    <!-- /.direct-chat-img -->
+    <div class="direct-chat-text">
+       ${data.message}
+    </div>
+    <!-- /.direct-chat-text -->
+</div>`;
+    } else {
+      directChatMessages.innerHTML += `<div class="direct-chat-msg">
+    <div class="direct-chat-infos clearfix">
+    </div>
+    <!-- /.direct-chat-infos -->
+    <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="Message User Image">
+    <!-- /.direct-chat-img -->
+    <div class="direct-chat-text">
+        ${data.message}
+    </div>
+    <!-- /.direct-chat-text -->
+</div>`;
+    }
+  }
+  static addEventsMessage(socket, user) {
+    socket.on("message-received", (data) => {
+      if (document.getElementById("directMessage").style.display == "none") {
+        console.log(user);
 
-  static async drawChatFriends(onlineList) {
+        document.getElementById("directMessage").style.display = "block";
+      }
+      this.getMessages(data, false);
+    });
+    const messageForm = document.getElementById("message-form"),
+      messageInput = document.querySelector('input[name="message"]'),
+      messageSendButton = document.getElementById("message-send-button");
+
+    messageSendButton.addEventListener("click", (e) => {
+      e.preventDefault();
+      this.sendMessage(socket, user, messageInput.value);
+    });
+  }
+  static sendMessage(socket, user, message) {
+    socket.emit("message", { user, message });
+    this.getMessages({ message }, true);
+  }
+  static async drawChatFriends(onlineList, socket) {
     let friends = await User.getFriends(localStorage.getItem("username")),
       contactsListUl = document.getElementsByClassName("contacts-list")[0];
     contactsListUl.innerHTML = "";
@@ -1482,7 +1533,15 @@ export default class Dom {
         }
         let adSoyad = element.getAttribute("adsoyad"),
           kullaniciAdi = element.getAttribute("kullaniciAdi");
-        this.openDirectMessage(adSoyad, kullaniciAdi);
+
+        let selectedUser = onlineFriends.map((i) => {
+          return i.username === kullaniciAdi
+            ? { id: i.id, username: kullaniciAdi }
+            : { username: kullaniciAdi };
+        });
+        console.log(selectedUser);
+
+        this.openDirectMessage(adSoyad, selectedUser, socket);
       });
     });
     return onlineFriends;
