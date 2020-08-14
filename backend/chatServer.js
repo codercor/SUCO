@@ -10,8 +10,10 @@ io.set("origins", "*:*");
 io.on("connection", (socket) => {
   console.log("A user connected...");
   socket.on("message", (data) => {
-    io.to(data.user[0].id).emit("message-received", { message: data.message });
-    console.log("test");
+    io.to(data.user[0].id).emit("message-received", {
+      message: data.message,
+      from: data.from,
+    });
   });
   //online olayı tetiklenirse
   socket.on("online", (userData) => {

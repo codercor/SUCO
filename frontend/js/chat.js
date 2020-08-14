@@ -26,6 +26,13 @@ function connect() {
   socket.on("disconnect", () => {
     DOM.messengerConnection(false);
   });
+  socket.on("message-received", (data) => {
+    let from = data.from;
+    let friendBox = document.querySelector(`li[kullaniciadi='${from}']`);
+    friendBox.click();
+    console.log("test", friendBox);
+    DOM.getMessages(data, false);
+  });
   socket.on("online-list-update", (data) => {
     onlineList = data;
     onlineList = DOM.drawChatFriends(onlineList, socket);

@@ -1264,9 +1264,9 @@ export default class Dom {
         <div class="col-6">
             <div class="row ">
                 <div class="col-3 offset-md-7 fixed-bottom">
-                    <div id="directMessage" class="card card-sucress cardutline direct-chat direct-chat-success" style="display:none">
+                    <div id="directMessage" class="card card-success card-outline direct-chat direct-chat-success" style="display:none">
                         <div class="card-header">
-                            <h3 class="card-title">Şükrü Ünlü</h3>
+                            <h3 class="card-title"></h3>
 
                             <div class="card-tools">
 
@@ -1456,14 +1456,6 @@ export default class Dom {
     }
   }
   static addEventsMessage(socket, user) {
-    socket.on("message-received", (data) => {
-      if (document.getElementById("directMessage").style.display == "none") {
-        console.log(user);
-
-        document.getElementById("directMessage").style.display = "block";
-      }
-      this.getMessages(data, false);
-    });
     const messageForm = document.getElementById("message-form"),
       messageInput = document.querySelector('input[name="message"]'),
       messageSendButton = document.getElementById("message-send-button");
@@ -1474,7 +1466,11 @@ export default class Dom {
     });
   }
   static sendMessage(socket, user, message) {
-    socket.emit("message", { user, message });
+    socket.emit("message", {
+      user,
+      message,
+      from: localStorage.getItem("username"),
+    });
     this.getMessages({ message }, true);
   }
   static async drawChatFriends(onlineList, socket) {
