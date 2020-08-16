@@ -1420,49 +1420,59 @@ export default class Dom {
     </div>`;
   }
   static messages = [];
+  static addSendMessageEvent(e) {
+    e.preventDefault();
+    let messageInput = document.querySelector('input[name="message"]');
+    this.sendMessage(e.target.socket, e.target.user, messageInput.value);
+    messageInput.value = "";
+  }
   static openDirectMessage(adSoyad, user, socket) {
-    this.addEventsMessage(socket, user);
     const directMessage = document.getElementById("directMessage"),
       friendName = document.querySelector("#directMessage .card-title");
+    const messageForm = document.getElementById("message-form");
     friendName.innerHTML = adSoyad;
-    directMessage.style.display = "block";
+    if (directMessage.style.display != "block") {
+      directMessage.style.display = "block";
+      messageForm.user = user;
+      messageForm.socket = socket;
+      messageForm.removeEventListener("click", this.addSendMessageEvent);
+      messageForm.addEventListener(
+        "submit",
+        this.addSendMessageEvent.bind(this)
+      );
+      console.log("Olay Ataması Yapıldı");
+    }
   }
-  static getMessages(data, itsMe = false) {
+  static getMessages(data, fUsername) {
     const directChatMessages = document.querySelector(".direct-chat-messages");
-    if (itsMe) {
-      directChatMessages.innerHTML += `<div class="direct-chat-msg right">
+    directChatMessages.innerHTML = "";
+    const myUsername = localStorage.getItem("username");
+    data.forEach((message) => {
+      if (message.from == myUsername && message.to == fUsername) {
+        directChatMessages.innerHTML += `<div class="direct-chat-msg right">
     <div class="direct-chat-infos clearfix">
     </div>
     <!-- /.direct-chat-infos -->
     <img class="direct-chat-img" src="dist/img/user3-128x128.jpg" alt="Message User Image">
     <!-- /.direct-chat-img -->
     <div class="direct-chat-text">
-       ${data.message}
+       ${message.content}
     </div>
     <!-- /.direct-chat-text -->
 </div>`;
-    } else {
-      directChatMessages.innerHTML += `<div class="direct-chat-msg">
+      } else if (message.from == fUsername) {
+        directChatMessages.innerHTML += `<div class="direct-chat-msg">
     <div class="direct-chat-infos clearfix">
     </div>
     <!-- /.direct-chat-infos -->
     <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="Message User Image">
     <!-- /.direct-chat-img -->
     <div class="direct-chat-text">
-        ${data.message}
+        ${message.content}
     </div>
     <!-- /.direct-chat-text -->
 </div>`;
-    }
-  }
-  static addEventsMessage(socket, user) {
-    const messageForm = document.getElementById("message-form"),
-      messageInput = document.querySelector('input[name="message"]'),
-      messageSendButton = document.getElementById("message-send-button");
-
-    messageSendButton.addEventListener("click", (e) => {
-      e.preventDefault();
-      this.sendMessage(socket, user, messageInput.value);
+      }
     });
   }
   static sendMessage(socket, user, message) {
@@ -1471,7 +1481,30 @@ export default class Dom {
       message,
       from: localStorage.getItem("username"),
     });
-    this.getMessages({ message }, true);
+    console.log();
+    this.saveMessagesToStorage({
+      from: localStorage.getItem("username"),
+      to: user[0].username,
+      content: message,
+    });
+    this.getMessages(this.getMessagesFromStorage(), user[0].username);
+  }
+  static saveMessagesToStorage(message) {
+    let messages = localStorage.getItem("messages");
+    if (messages === null) {
+      localStorage.setItem("messages", JSON.stringify([]));
+    }
+    messages = JSON.parse(messages);
+    messages.push(message);
+    localStorage.setItem("messages", JSON.stringify(messages));
+  }
+  static getMessagesFromStorage() {
+    let messages = localStorage.getItem("messages");
+    if (messages === null) {
+      localStorage.setItem("messages", JSON.stringify([]));
+    }
+    messages = JSON.parse(messages);
+    return messages;
   }
   static async drawChatFriends(onlineList, socket) {
     let friends = await User.getFriends(localStorage.getItem("username")),
@@ -1536,11 +1569,15 @@ export default class Dom {
             : { username: kullaniciAdi };
         });
         console.log(selectedUser);
-
+        this.closeDirectMessage();
         this.openDirectMessage(adSoyad, selectedUser, socket);
       });
     });
     return onlineFriends;
+  }
+  static closeDirectMessage() {
+    const directMessage = document.getElementById("directMessage");
+    directMessage.style.display = "none";
   }
   static messengerConnection(status) {
     const messengerBox = document.getElementById("messenger-box");

@@ -14,6 +14,7 @@ io.on("connection", (socket) => {
       message: data.message,
       from: data.from,
     });
+    console.log(data.message);
   });
   //online olayı tetiklenirse
   socket.on("online", (userData) => {

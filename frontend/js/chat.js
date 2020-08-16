@@ -30,8 +30,13 @@ function connect() {
     let from = data.from;
     let friendBox = document.querySelector(`li[kullaniciadi='${from}']`);
     friendBox.click();
-    console.log("test", friendBox);
-    DOM.getMessages(data, false);
+    console.log(data);
+    DOM.saveMessagesToStorage({
+      from: from,
+      to: localStorage.getItem("username"),
+      content: data.message,
+    });
+    DOM.getMessages(DOM.getMessagesFromStorage(), from);
   });
   socket.on("online-list-update", (data) => {
     onlineList = data;
