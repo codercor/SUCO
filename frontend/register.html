@@ -1,146 +1,146 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>AdminLTE 3 | Log in</title>
-    <!-- Tell the browser to be responsive to screen width -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>AdminLTE 3 | Log in</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <!-- icheck bootstrap -->
-    <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="dist/css/adminlte.min.css">
-    <!-- Google Font: Source Sans Pro -->
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-    <style>
-        .kenburns-top {
-            width: 100%;
-            height: 100vh;
-            z-index: -1;
-            position: absolute;
-            background-image:url("img/login-bg.jpg");
-            -webkit-animation: kenburns-top 5s ease-in-out infinite alternate both;
-            animation: kenburns-top 5s ease-in-out infinite alternate both;
-        }
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <style>
+    .kenburns-top {
+      width: 100%;
+      height: 100vh;
+      z-index: -1;
+      position: absolute;
+      background-image: url("img/login-bg.jpg");
+      -webkit-animation: kenburns-top 5s ease-in-out infinite alternate both;
+      animation: kenburns-top 5s ease-in-out infinite alternate both;
+    }
 
-        @-webkit-keyframes kenburns-top {
-            0% {
-                -webkit-transform: scale(1) translateY(0);
-                transform: scale(1) translateY(0);
-                -webkit-transform-origin: 50% 16%;
-                transform-origin: 50% 16%;
-            }
+    @-webkit-keyframes kenburns-top {
+      0% {
+        -webkit-transform: scale(1) translateY(0);
+        transform: scale(1) translateY(0);
+        -webkit-transform-origin: 50% 16%;
+        transform-origin: 50% 16%;
+      }
 
-            100% {
-                -webkit-transform: scale(1.25) translateY(-15px);
-                transform: scale(1.25) translateY(-15px);
-                -webkit-transform-origin: top;
-                transform-origin: top;
-            }
-        }
+      100% {
+        -webkit-transform: scale(1.25) translateY(-15px);
+        transform: scale(1.25) translateY(-15px);
+        -webkit-transform-origin: top;
+        transform-origin: top;
+      }
+    }
 
-        @keyframes kenburns-top {
-            0% {
-                -webkit-transform: scale(1) translateY(0);
-                transform: scale(1) translateY(0);
-                -webkit-transform-origin: 50% 16%;
-                transform-origin: 50% 16%;
-            }
+    @keyframes kenburns-top {
+      0% {
+        -webkit-transform: scale(1) translateY(0);
+        transform: scale(1) translateY(0);
+        -webkit-transform-origin: 50% 16%;
+        transform-origin: 50% 16%;
+      }
 
-            100% {
-                -webkit-transform: scale(1.25) translateY(-15px);
-                transform: scale(1.25) translateY(-15px);
-                -webkit-transform-origin: top;
-                transform-origin: top;
-            }
-        }
-    </style>
+      100% {
+        -webkit-transform: scale(1.25) translateY(-15px);
+        transform: scale(1.25) translateY(-15px);
+        -webkit-transform-origin: top;
+        transform-origin: top;
+      }
+    }
+  </style>
 </head>
 
 <body class="login-page" style="min-height: 512.8px;background-color: red;">
-    <div class="kenburns-top">
+  <div class="kenburns-top">
 
+  </div>
+  <div class="login-box">
+    <div class="login-logo">
+      <a><b>SU</b>CO</a>
     </div>
-    <div class="login-box">
-        <div class="login-logo">
-            <a><b>SU</b>CO</a>
-        </div>
-        <!-- /.login-logo -->
-        <div class="card">
-            <div class="card-body login-card-body">
-                <p class="login-box-msg">Kayıt ol ve giriş yap</p>
-                <form  method="post">
-                    <div class="input-group mb-3">
-                      <input type="text" id="name" class="form-control" placeholder="Ad Soyad">
-                      <div class="input-group-append">
-                        <div class="input-group-text">
-                          <span class="fas fa-user"></span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="input-group mb-3">
-                        <input type="text" id="username" class="form-control" placeholder="Kullanıcı Adı">
-                        <div class="input-group-append">
-                          <div class="input-group-text">
-                            <span class="fas fa-user"></span>
-                          </div>
-                        </div>
-                      </div>
-                    <div class="input-group mb-3">
-                      <input type="email" id="email" class="form-control" placeholder="Eposta">
-                      <div class="input-group-append">
-                        <div class="input-group-text">
-                          <span class="fas fa-envelope"></span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="input-group mb-3">
-                      <input type="password" id="password" class="form-control" placeholder="Şifre">
-                      <div class="input-group-append">
-                        <div class="input-group-text">
-                          <span class="fas fa-lock"></span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="input-group mb-3">
-                      <input type="password" id="repassword" class="form-control" placeholder="Tekrar Şifre">
-                      <div class="input-group-append">
-                        <div class="input-group-text">
-                          <span class="fas fa-lock"></span>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-
-                <div class="social-auth-links text-center mb-3">
-                    <p>- YADA -</p>
-                    <button  id="registerButton" class="btn btn-block btn-primary">
-                        <i class="fas fa-sign-in-alt"></i> Kayıt Ol
-                    </button>
-                    <a href="login.html" class="btn btn-sm btn-block btn-info">
-                        <i class="fas fa-key"></i>  Giriş Yap
-                    </a>
-                </div>
-                <!-- /.social-auth-links -->
-
-
+    <!-- /.login-logo -->
+    <div class="card">
+      <div class="card-body login-card-body">
+        <p class="login-box-msg">Kayıt ol ve giriş yap</p>
+        <form method="post">
+          <div class="input-group mb-3">
+            <input type="text" id="name" class="form-control" placeholder="Ad Soyad">
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-user"></span>
+              </div>
             </div>
-            <!-- /.login-card-body -->
+          </div>
+          <div class="input-group mb-3">
+            <input type="text" id="username" class="form-control" placeholder="Kullanıcı Adı">
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-user"></span>
+              </div>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            <input type="email" id="email" class="form-control" placeholder="Eposta">
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-envelope"></span>
+              </div>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            <input type="password" id="password" class="form-control" placeholder="Şifre">
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-lock"></span>
+              </div>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            <input type="password" id="repassword" class="form-control" placeholder="Tekrar Şifre">
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-lock"></span>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <div class="social-auth-links text-center mb-3">
+          <p>- YADA -</p>
+          <button id="registerButton" class="btn btn-block btn-primary">
+            <i class="fas fa-sign-in-alt"></i> Kayıt Ol
+          </button>
+          <a href="login.html" class="btn btn-sm btn-block btn-info">
+            <i class="fas fa-key"></i> Giriş Yap
+          </a>
         </div>
+        <!-- /.social-auth-links -->
+
+
+      </div>
+      <!-- /.login-card-body -->
     </div>
-    <!-- /.login-box -->
-    <script type="module" src="app.js"></script>
-    <!-- jQuery -->
-    <script src="plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap 4 -->
-    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="dist/js/adminlte.min.js"></script>
+  </div>
+  <!-- /.login-box -->
+  <script type="module" src="app.js"></script>
+  <!-- jQuery -->
+  <script src="plugins/jquery/jquery.min.js"></script>
+  <!-- Bootstrap 4 -->
+  <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- AdminLTE App -->
+  <script src="dist/js/adminlte.min.js"></script>
 
 
 
