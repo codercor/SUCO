@@ -1,7 +1,7 @@
 {
-  "name": "hello-world",
+  "name": "suco-media",
   "version": "0.0.1",
-  "description": "Hello World example app",
+  "description": "suco social media",
   "main": "backend/app.js",
   "scripts": {
     "start": "backend/app.js"
