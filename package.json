@@ -16,7 +16,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"app.js\" \"chatServer.js\""
+    "start": "concurrently \"./app.js\" \"./chatServer.js\""
   },
   "author": "corx",
   "license": "ISC"
