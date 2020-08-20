@@ -1423,25 +1423,34 @@ export default class Dom {
   static addSendMessageEvent(e) {
     e.preventDefault();
     let messageInput = document.querySelector('input[name="message"]');
-    this.sendMessage(e.target.socket, e.target.user, messageInput.value);
+    e.target._this.sendMessage(
+      e.target.socket,
+      e.target.user,
+      messageInput.value
+    );
     messageInput.value = "";
   }
   static openDirectMessage(adSoyad, user, socket) {
+    console.log("Selam");
     const directMessage = document.getElementById("directMessage"),
       friendName = document.querySelector("#directMessage .card-title");
     const messageForm = document.getElementById("message-form");
+    let messageInput = document.querySelector('input[name="message"]');
     friendName.innerHTML = adSoyad;
     if (directMessage.style.display != "block") {
       directMessage.style.display = "block";
       messageForm.user = user;
       messageForm.socket = socket;
-      messageForm.removeEventListener("click", this.addSendMessageEvent);
-      messageForm.addEventListener(
+      messageForm._this = this;
+      messageForm.removeEventListener(
         "submit",
-        this.addSendMessageEvent.bind(this)
+        this.addSendMessageEvent,
+        false
       );
+      messageForm.addEventListener("submit", this.addSendMessageEvent);
       console.log("Olay Ataması Yapıldı");
     }
+    this.getMessages(this.getMessagesFromStorage(), user[0].username);
   }
   static getMessages(data, fUsername) {
     const directChatMessages = document.querySelector(".direct-chat-messages");
@@ -1493,6 +1502,7 @@ export default class Dom {
     let messages = localStorage.getItem("messages");
     if (messages === null) {
       localStorage.setItem("messages", JSON.stringify([]));
+      messages = localStorage.getItem("messages");
     }
     messages = JSON.parse(messages);
     messages.push(message);
