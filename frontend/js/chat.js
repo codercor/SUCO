@@ -37,6 +37,7 @@ function connect() {
       content: data.message,
     });
     DOM.getMessages(DOM.getMessagesFromStorage(), from);
+    DOM.playBip();
   });
   socket.on("online-list-update", (data) => {
     onlineList = data;

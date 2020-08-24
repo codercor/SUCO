@@ -115,7 +115,7 @@ const Navbar = `  <nav class="main-header navbar navbar-expand navbar-white navb
             </li>
             <li class="nav-item">
                 <a href="profile.html" class="nav-link sidebar-profile">
-                    <i class="nav-icon fas fa-cog"></i>
+                    <i class="nav-icon fas fa-user"></i>
                     <p>
                         Profil
                         <span class="right badge badge-danger">New</span>
@@ -1294,10 +1294,10 @@ export default class Dom {
                         <div class="card-footer" style="display: block;">
                             <form id="message-form">
                                 <div class="input-group">
-                                    <input type="text" name="message" placeholder="Type Message ..."
+                                    <input type="text" name="message"  autocomplete="off" placeholder="Sadece yaz..."
                                         class="form-control">
                                     <span class="input-group-append">
-                                        <button type="submit" id="message-send-button" class="btn btn-success">Send</button>
+                                        <button type="submit" id="message-send-button" class="btn btn-success">Gönder</button>
                                     </span>
                                 </div>
                             </form>
@@ -1448,41 +1448,47 @@ export default class Dom {
         false
       );
       messageForm.addEventListener("submit", this.addSendMessageEvent);
-      console.log("Olay Ataması Yapıldı");
     }
     this.getMessages(this.getMessagesFromStorage(), user[0].username);
   }
-  static getMessages(data, fUsername) {
+  static messageScrollKeepBottom() {
+    const messagesBody = document.querySelector(".direct-chat-messages");
+    messagesBody.scrollTop =
+      messagesBody.scrollHeight - messagesBody.clientHeight;
+  }
+  static async getMessagePP(username) {
+    let userPP = localStorage.getItem("pp-" + username);
+    if (userPP === null) {
+      let userData = await User.getUserData(username);
+      let pp = env.host + userData.profilResmi;
+      localStorage.setItem("pp-" + username, pp);
+      userPP = localStorage.getItem("pp-" + username);
+    }
+    return userPP;
+  }
+  static async getMessages(data, fUsername) {
     const directChatMessages = document.querySelector(".direct-chat-messages");
     directChatMessages.innerHTML = "";
     const myUsername = localStorage.getItem("username");
-    data.forEach((message) => {
-      if (message.from == myUsername && message.to == fUsername) {
-        directChatMessages.innerHTML += `<div class="direct-chat-msg right">
-    <div class="direct-chat-infos clearfix">
-    </div>
-    <!-- /.direct-chat-infos -->
-    <img class="direct-chat-img" src="dist/img/user3-128x128.jpg" alt="Message User Image">
-    <!-- /.direct-chat-img -->
-    <div class="direct-chat-text">
-       ${message.content}
-    </div>
-    <!-- /.direct-chat-text -->
-</div>`;
-      } else if (message.from == fUsername) {
-        directChatMessages.innerHTML += `<div class="direct-chat-msg">
-    <div class="direct-chat-infos clearfix">
-    </div>
-    <!-- /.direct-chat-infos -->
-    <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="Message User Image">
-    <!-- /.direct-chat-img -->
-    <div class="direct-chat-text">
-        ${message.content}
-    </div>
-    <!-- /.direct-chat-text -->
-</div>`;
-      }
-    });
+
+    for (let i = 0; i < data.length; i++) {
+      directChatMessages.innerHTML += `<div class="direct-chat-msg ${
+        data[i].from == myUsername && data[i].to == fUsername ? "right" : ""
+      }">
+        <div class="direct-chat-infos clearfix">
+        </div>
+        <!-- /.direct-chat-infos -->
+        <img class="direct-chat-img" src="${await this.getMessagePP(
+          data[i].from
+        )}" alt="Message User Image">
+        <!-- /.direct-chat-img -->
+        <div class="direct-chat-text">
+          ${data[i].content}
+        </div>
+        <!-- /.direct-chat-text -->
+    </div>`;
+    }
+    this.messageScrollKeepBottom();
   }
   static sendMessage(socket, user, message) {
     socket.emit("message", {
@@ -1515,6 +1521,10 @@ export default class Dom {
     }
     messages = JSON.parse(messages);
     return messages;
+  }
+  static playBip() {
+    let bip = new Audio("dist/bip.ogg");
+    bip.play();
   }
   static async drawChatFriends(onlineList, socket) {
     let friends = await User.getFriends(localStorage.getItem("username")),

@@ -47,5 +47,6 @@ io.on("connection", (socket) => {
 });
 
 server.listen(84, () => {
-  console.log("chat server run");
+  console.log("chat server çalışıyor...");
 });
+//  DB işlemleri
