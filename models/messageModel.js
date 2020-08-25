@@ -7,21 +7,21 @@ let messageModel = {
     }', '${message.alici}', '${message.icerik}', '${getDate()}');`;
     con.query(sql);
   },
-  async getMessages(arkadas1, arkadas2, baslangic, uzunluk) {
+  getMessages(arkadas1, arkadas2, sayfa) {
+    let baslangic,
+      uzunluk = 5;
+    if (sayfa === 0) sayfa = 1;
+    baslangic = (sayfa - 1) * 5; // 1   - 0,5  ||   2     - 5,5
     let sql = `SELECT * FROM mesajlar WHERE 
                 (gonderici = '${arkadas1}' OR gonderici = '${arkadas2}')
                 AND 
                 (alici = '${arkadas1}' OR alici = '${arkadas2}') 
                 ORDER BY tarih DESC LIMIT ${baslangic},${uzunluk}`;
-    let mesajlar = [];
-    await new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       con.query(sql, (err, result) => {
-        mesajlar = result;
-        resolve();
+        resolve(result);
       });
     });
-
-    return mesajlar;
   },
 };
 module.exports = messageModel;
