@@ -9,7 +9,7 @@ let messageModel = {
   },
   getMessages(arkadas1, arkadas2, sayfa) {
     let baslangic,
-      uzunluk = 5;
+      uzunluk = 7;
     if (sayfa === 0) sayfa = 1;
     baslangic = (sayfa - 1) * 5; // 1   - 0,5  ||   2     - 5,5
     let sql = `SELECT * FROM mesajlar WHERE 

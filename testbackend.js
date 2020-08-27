@@ -1,6 +1,10 @@
 const messageModel = require("./models/messageModel");
 const app = require("express")();
+const cors = require("cors");
 let messages;
+
+app.use(cors());
+
 app.listen(80, () => {
   console.log("Test Sunucusu Çalışıyor...");
 });
