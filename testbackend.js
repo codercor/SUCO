@@ -22,5 +22,7 @@ app.get("/getMessages", async (req, res) => {
       content: item.icerik,
     };
   });
-  res.json(messages);
+  setTimeout(() => {
+    res.json(messages);
+  }, 1000);
 });
