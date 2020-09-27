@@ -5,6 +5,26 @@ const server = require("http").Server(app);
 const io = require("socket.io")(server);
 let clients = [];
 
+const messageModel = require("./models/messageModel");
+
+app.get("/getMessages", async (req, res) => {
+  let messages = await messageModel.getMessages(
+    req.query.from, // mesajin kimden
+    req.query.to, // kime
+    req.query.page //
+  );
+  messages = messages.map((item) => {
+    return {
+      from: item.gonderici,
+      to: item.alici,
+      content: item.icerik,
+    };
+  });
+  setTimeout(() => {
+    res.json(messages);
+  }, 1000);
+});
+
 io.set("origins", "*:*");
 // Bağlanması
 io.on("connection", (socket) => {
@@ -14,7 +34,12 @@ io.on("connection", (socket) => {
       message: data.message,
       from: data.from,
     });
-    console.log(data.message);
+    messageModel.saveMessage({
+      gonderici: data.from,
+      alici: data.user[0].username,
+      icerik: data.message,
+    });
+    console.log(data);
   });
   //online olayı tetiklenirse
   socket.on("online", (userData) => {
@@ -47,6 +72,6 @@ io.on("connection", (socket) => {
 });
 
 server.listen(84, () => {
-  console.log("chat server çalışıyor...");
+  console.log("SUCO chat sunucusu çalışıyor...");
 });
 //  DB işlemleri

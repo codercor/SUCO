@@ -128,8 +128,13 @@ const Navbar = `  <nav class="main-header navbar navbar-expand navbar-white navb
 </div>
 <!-- /.sidebar -->
 </aside>`;
+
 let timeOut = setTimeout(() => {});
+let tempHeight;
 export default class Dom {
+  static isFirst = true;
+  static isFinish = false;
+  static directMessage;
   static async standartRender(data) {
     let wrapper = document.getElementsByClassName("wrapper")[0];
     wrapper.insertAdjacentHTML("afterbegin", Sidebar);
@@ -1258,6 +1263,7 @@ export default class Dom {
             </div>`;
     });
   }
+
   static drawChat() {
     const chatDiv = document.getElementById("chatDiv");
     chatDiv.innerHTML = `  <div class="row">
@@ -1418,6 +1424,16 @@ export default class Dom {
             <!-- /.modal-dialog -->
         </div>
     </div>`;
+    this.directMessage = document.querySelector(".direct-chat-messages");
+
+    this.directMessage.addEventListener("scroll", () => {
+      if (this.directMessage.scrollTop <= 0) {
+        setTimeout(() => {});
+        console.log("Eski mesajları yükleyeceğiz bu sırada");
+      }
+      console.log(this.directMessage.scrollTop);
+    });
+    setTimeout(() => {});
   }
   static messages = [];
   static addSendMessageEvent(e) {
@@ -1466,15 +1482,22 @@ export default class Dom {
     }
     return userPP;
   }
-  static async getMessages(data, fUsername) {
+
+  static async getMessages(fUsername) {
+    console.log(tempHeight);
+    let data = await (
+      await fetch("http://localhost:84/getMessages?to=corx&from=sukru1&page=1")
+    ).json();
     const directChatMessages = document.querySelector(".direct-chat-messages");
     directChatMessages.innerHTML = "";
     const myUsername = localStorage.getItem("username");
 
     for (let i = 0; i < data.length; i++) {
-      directChatMessages.innerHTML += `<div class="direct-chat-msg ${
-        data[i].from == myUsername && data[i].to == fUsername ? "right" : ""
-      }">
+      directChatMessages.insertAdjacentHTML(
+        "afterbegin",
+        `<div class="direct-chat-msg ${
+          data[i].from == myUsername && data[i].to == fUsername ? "right" : ""
+        }">
         <div class="direct-chat-infos clearfix">
         </div>
         <!-- /.direct-chat-infos -->
@@ -1486,9 +1509,24 @@ export default class Dom {
           ${data[i].content}
         </div>
         <!-- /.direct-chat-text -->
-    </div>`;
+    </div>`
+      );
     }
-    this.messageScrollKeepBottom();
+    tempHeight = this.directMessage.scrollHeight;
+    console.log(tempHeight);
+    this.scrollSet();
+  }
+
+  static scrollSet() {
+    console.log("ScrollSet Çalıştı");
+    if (this.isFirst) {
+      this.directMessage.scrollTop = this.directMessage.scrollHeight;
+      console.log(this.directMessage.scrollTop);
+      this.isFirst = false;
+    } else {
+      if (this.isFinish) return;
+      directMessage.scrollTop = directMessage.scrollHeight - tempHeight;
+    }
   }
   static sendMessage(socket, user, message) {
     socket.emit("message", {

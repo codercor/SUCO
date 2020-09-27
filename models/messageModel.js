@@ -2,10 +2,15 @@ const con = require("./connection");
 
 let messageModel = {
   saveMessage(message) {
-    let sql = `INSERT INTO mesajlar (id, gonderici, alici, icerik, tarih) VALUES (NULL, '${
+    let sql = `INSERT INTO mesajlar (id, gonderici, alici, icerik, tarih) VALUES (NULL, "${
       message.gonderici
-    }', '${message.alici}', '${message.icerik}', '${getDate()}');`;
-    con.query(sql);
+    }", "${message.alici}", "${message.icerik}", "${getDate()}");`;
+    console.log(sql);
+    return new Promise((resolve, reject) => {
+      con.query(sql, (err, result) => {
+        if (result) resolve();
+      });
+    });
   },
   getMessages(arkadas1, arkadas2, sayfa) {
     let baslangic,

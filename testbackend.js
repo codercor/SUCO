@@ -1,8 +1,10 @@
 const messageModel = require("./models/messageModel");
 const app = require("express")();
+const bodyParser = require("body-parser");
 const cors = require("cors");
 let messages;
 
+app.use(bodyParser.json({ extended: true }));
 app.use(cors());
 
 app.listen(80, () => {
@@ -25,4 +27,17 @@ app.get("/getMessages", async (req, res) => {
   setTimeout(() => {
     res.json(messages);
   }, 1000);
+});
+
+app.post("/saveMessage", (req, res) => {
+  let to = "selami",
+    from = "sahin",
+    content = req.body.message,
+    messageModel = require("./models/messageModel");
+  console.log({ gonderici: from, alici: to, icerik: content });
+  messageModel
+    .saveMessage({ gonderici: from, alici: to, icerik: content })
+    .then(() => {
+      res.sendStatus(200);
+    });
 });

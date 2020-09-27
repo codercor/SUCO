@@ -15,4 +15,4 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/user", userController);
 app.use("/post", postController);
 
-server.listen(85, () => console.log("Yayın başladı..."));
+server.listen(85, () => console.log("SUCO sunucusu çalışıyor..."));

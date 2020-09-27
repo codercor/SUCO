@@ -36,7 +36,7 @@ function connect() {
       to: localStorage.getItem("username"),
       content: data.message,
     });
-    DOM.getMessages(DOM.getMessagesFromStorage(), from);
+    DOM.getMessages(from);
     DOM.playBip();
   });
   socket.on("online-list-update", (data) => {

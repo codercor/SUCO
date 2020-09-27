@@ -13,7 +13,7 @@ function loading(status) {
   if (status) {
     let loadingContainer = document.createElement("div");
     loadingContainer.style =
-      "position:absolute;background-color:red;width:200px";
+      "padding:0;margin:0;box-sizing:border-box;relative:absolute;background-color:white;width:100%;text-align:center";
 
     let loadingElement = document.createElement("img");
     loadingElement.src = "loading.gif";
@@ -69,4 +69,21 @@ directMessage.addEventListener("scroll", async (e) => {
     );
   }
   console.log(directMessage.scrollTop);
+});
+
+const messageInput = document.getElementById("message-input");
+messageInput.addEventListener("keydown", (e) => {
+  if (e.key == "Enter") {
+    //mesag gönder
+    let message = messageInput.value;
+    fetch("http://localhost/saveMessage", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+      },
+      body: JSON.stringify({ message: message }),
+    }).then((response) => {
+      response.status == 200 ? (messageInput.value = "") : "";
+    });
+  }
 });
