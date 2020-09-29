@@ -36,6 +36,7 @@ function connect() {
       to: localStorage.getItem("username"),
       content: data.message,
     });
+    console.log("FROM BURADAN VERİLİYOR ->", from);
     DOM.getMessages(from);
     DOM.playBip();
   });

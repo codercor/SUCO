@@ -130,11 +130,13 @@ const Navbar = `  <nav class="main-header navbar navbar-expand navbar-white navb
 </aside>`;
 
 let timeOut = setTimeout(() => {});
-let tempHeight;
+
 export default class Dom {
   static isFirst = true;
   static isFinish = false;
   static directMessage;
+  static page = 1;
+  static tempHeight;
   static async standartRender(data) {
     let wrapper = document.getElementsByClassName("wrapper")[0];
     wrapper.insertAdjacentHTML("afterbegin", Sidebar);
@@ -1425,13 +1427,13 @@ export default class Dom {
         </div>
     </div>`;
     this.directMessage = document.querySelector(".direct-chat-messages");
-
-    this.directMessage.addEventListener("scroll", () => {
+    this.directMessage.addEventListener("scroll", async () => {
       if (this.directMessage.scrollTop <= 0) {
-        setTimeout(() => {});
-        console.log("Eski mesajları yükleyeceğiz bu sırada");
+        this.page += 1;
+        await this.getMessages("sukru1");
+        this.scrollSet();
       }
-      console.log(this.directMessage.scrollTop);
+      console.log("scrollTop :" + this.directMessage.scrollTop);
     });
     setTimeout(() => {});
   }
@@ -1465,7 +1467,8 @@ export default class Dom {
       );
       messageForm.addEventListener("submit", this.addSendMessageEvent);
     }
-    this.getMessages(this.getMessagesFromStorage(), user[0].username);
+
+    this.getMessages(user[0].username);
   }
   static messageScrollKeepBottom() {
     const messagesBody = document.querySelector(".direct-chat-messages");
@@ -1484,14 +1487,9 @@ export default class Dom {
   }
 
   static async getMessages(fUsername) {
-    console.log(tempHeight);
-    let data = await (
-      await fetch("http://localhost:84/getMessages?to=corx&from=sukru1&page=1")
-    ).json();
     const directChatMessages = document.querySelector(".direct-chat-messages");
-    directChatMessages.innerHTML = "";
     const myUsername = localStorage.getItem("username");
-
+    let data = await this.getMessagesFromServer(fUsername);
     for (let i = 0; i < data.length; i++) {
       directChatMessages.insertAdjacentHTML(
         "afterbegin",
@@ -1512,20 +1510,32 @@ export default class Dom {
     </div>`
       );
     }
-    tempHeight = this.directMessage.scrollHeight;
-    console.log(tempHeight);
+
     this.scrollSet();
   }
 
+  static async getMessagesFromServer(fusername) {
+    let myUsername = localStorage.getItem("username");
+    let url = `http://localhost:84/getMessages?to=${fusername}&from=${myUsername}&page=${this.page}`;
+    let messages = await (await fetch(url)).json();
+    this.tempHeight = this.directMessage.scrollHeight;
+    return messages;
+  }
+
   static scrollSet() {
-    console.log("ScrollSet Çalıştı");
+    console.log(
+      "ScrollSet Çalıştı",
+      "TempHeight " + this.tempHeight,
+      "ScrollHeight" + this.directMessage.scrollHeight
+    );
     if (this.isFirst) {
       this.directMessage.scrollTop = this.directMessage.scrollHeight;
       console.log(this.directMessage.scrollTop);
       this.isFirst = false;
     } else {
       if (this.isFinish) return;
-      directMessage.scrollTop = directMessage.scrollHeight - tempHeight;
+      this.directMessage.scrollTop =
+        this.directMessage.scrollHeight - this.tempHeight;
     }
   }
   static sendMessage(socket, user, message) {
@@ -1540,7 +1550,8 @@ export default class Dom {
       to: user[0].username,
       content: message,
     });
-    this.getMessages(this.getMessagesFromStorage(), user[0].username);
+    // Bunu burdan sil TODO
+    // this.getMessages(this.getMessagesFromStorage(), user[0].username);
   }
   static saveMessagesToStorage(message) {
     let messages = localStorage.getItem("messages");
@@ -1630,6 +1641,14 @@ export default class Dom {
         this.closeDirectMessage();
         this.openDirectMessage(adSoyad, selectedUser, socket);
       });
+    });
+    let friendBoxes = document.querySelectorAll(".chat-online-user");
+    friendBoxes.forEach((friend) => {
+      let friendUsername = friend.getAttribute("kullaniciAdi");
+      friend.onclick = async () => {
+        await this.getMessages(friendUsername);
+        this.scrollSet();
+      };
     });
     return onlineFriends;
   }
